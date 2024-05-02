@@ -44,6 +44,7 @@
     <div class="login-form" id="login-popup-form">
         <div class="cotainer">
             <div class="card">
+                <a href="{{ route('login.google') }}" class="btn btn-danger">Continue with Google</a>
                 <div class="card-header text-center">
                     Login
                     <button type="button" class="close" onclick="closeForm()" aria-label="Close">
@@ -58,19 +59,22 @@
                         @csrf
                         <div class="form-group mb-3">
                             <input type="text" placeholder="Email" id="email" class="form-control" name="email" required autofocus>
-                            @if ($errors->has('email'))
-                                <span class="text-danger">{{ $errors->first('email') }}</span>
-                            @endif
                         </div>
                         <div class="form-group mb-3">
                             <input type="password" placeholder="Password" id="password" class="form-control" name="password" required>
-                            @if ($errors->has('password'))
-                                <span class="text-danger">{{ $errors->first('password') }}</span>
-                            @endif
                         </div>
-                        <div class="d-grid mx-auto">
+                        <div class="submit-btn">
                             <button type="submit" class="btn btn-dark btn-block">Log in</button>
                         </div>
+                        @if ($errors->any())
+                            <div class="alert alert-danger mt-3">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>
@@ -81,6 +85,7 @@
     <div class="signup-form" id="signup-popup-form">
         <div class="cotainer">
             <div class="card">
+                <a href="{{ route('login.google') }}" class="btn btn-danger">Continue with Google</a>
                 <div class="card-header text-center">
                     Signup
                     <button type="button" class="close" onclick="closeForm()" aria-label="Close">

@@ -6,9 +6,43 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Hash;
 use Session;
+use Socialite;
 
 class UserController extends Controller
 {
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $user = Socialite::driver('google')->user();
+    
+            $finduser = User::where('google_id', $user->id)->first();
+    
+            if ($finduser) {
+                Auth::login($finduser);
+                return redirect('/dashboard');
+            } else {
+                session([
+                    'googleUser' => [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'google_id' => $user->id,
+                        'avatar' => $user->avatar
+                    ]
+                ]);
+                return redirect('complete-registration');
+            }
+    
+        } catch (Exception $e) {
+            return back()->withErrors('Unable to login using Google.');
+        }
+    }
+    
 
     public function signUp(Request $request)
     {
@@ -38,12 +72,13 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]);
+
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             return redirect()->intended('dashboard')
                 ->withSuccess('Signed in');
         }
-        return redirect("login")->withSuccess('Login details are not valid');
+        return back()->withErrors('Login details are not valid');
     }
 
 
@@ -61,4 +96,32 @@ class UserController extends Controller
         Auth::logout();
         return Redirect("/");
     }
+
+
+    public function showCompleteRegistrationForm()
+    {
+        return view('auth.complete-registration');
+    }
+
+    public function completeGoogleRegistration(Request $request)
+    {
+        $request->validate(['username' => 'required|unique:users']);
+
+        $googleUserData = session('googleUser');
+        if (!$googleUserData) {
+            return redirect('login')->withErrors('Session has expired, please try again.');
+        }
+
+        $user = User::create([
+            'username' => $request->username,
+            'name' => $googleUserData['name'],
+            'email' => $googleUserData['email'],
+            'google_id' => $googleUserData['google_id'],
+            'password' => encrypt('my-google') // Just a placeholder, not used for login
+        ]);
+
+        Auth::login($user);
+        return redirect('/dashboard');
+    }
+
 }

@@ -22,3 +22,11 @@ Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard')
 Route::post('signUp', [UserController::class, 'signUp'])->name('signUp');
 Route::post('login', [UserController::class, 'login'])->name('login');
 Route::get('logout', [UserController::class, 'logout'])->name('logout');
+
+
+Route::get('login/google', [UserController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('login/google/callback', [UserController::class, 'handleGoogleCallback']);
+
+
+Route::get('complete-registration', [UserController::class, 'showCompleteRegistrationForm'])->name('show-complete-registration');
+Route::post('complete-google-registration', [UserController::class, 'completeGoogleRegistration'])->name('complete-google-registration');
