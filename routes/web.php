@@ -30,3 +30,7 @@ Route::get('login/google/callback', [UserController::class, 'handleGoogleCallbac
 
 Route::get('complete-registration', [UserController::class, 'showCompleteRegistrationForm'])->name('show-complete-registration');
 Route::post('complete-google-registration', [UserController::class, 'completeGoogleRegistration'])->name('complete-google-registration');
+
+
+Route::get('reset-password', [UserController::class, 'showResetPasswordForm'])->name('show-reset-password-form');
+Route::post('reset-password', [UserController::class, 'resetPassword'])->name('reset-password');

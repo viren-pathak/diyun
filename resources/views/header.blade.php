@@ -57,15 +57,6 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-                        <div class="form-group mb-3">
-                            <input type="text" placeholder="Email" id="email" class="form-control" name="email" required autofocus>
-                        </div>
-                        <div class="form-group mb-3">
-                            <input type="password" placeholder="Password" id="password" class="form-control" name="password" required>
-                        </div>
-                        <div class="submit-btn">
-                            <button type="submit" class="btn btn-dark btn-block">Log in</button>
-                        </div>
                         @if ($errors->any())
                             <div class="alert alert-danger mt-3">
                                 <ul>
@@ -75,6 +66,19 @@
                                 </ul>
                             </div>
                         @endif
+                        <div class="form-group mb-3">
+                            <input type="text" placeholder="Email" id="email" class="form-control" name="email" required autofocus>
+                        </div>
+                        <div class="form-group mb-3">
+                            <input type="password" placeholder="Password" id="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="submit-btn">
+                            <button type="submit" class="btn btn-dark btn-block">Log in</button>
+                        </div>
+
+                        <div class="card-footer forgot-pass-btn">
+                            <a href="{{ route('show-reset-password-form') }}">Forgot Password?</a>
+                        </div>
                     </form>
                 </div>
             </div>

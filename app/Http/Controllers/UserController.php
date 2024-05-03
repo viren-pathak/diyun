@@ -124,4 +124,24 @@ class UserController extends Controller
         return redirect('/dashboard');
     }
 
+
+    public function showResetPasswordForm()
+    {
+        return view('auth.reset-password');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        // Logic to send reset password email
+        // You can use Laravel's built-in Password Broker for this
+
+        // Redirect back with success message
+        return back()->with('success', 'Password reset email sent successfully!');
+    }
+
+
 }
