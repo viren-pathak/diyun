@@ -35,8 +35,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                     </li>
+                    <a href="{{ route('debate.step1') }}" class="nav-link">New +</a>
                     @endguest
                 </ul>
+                <!-- header.blade.php -->
+
             </div>
         </div>
     </nav>

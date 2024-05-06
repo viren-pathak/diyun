@@ -25,7 +25,7 @@ class UserController extends Controller
     
             if ($finduser) {
                 Auth::login($finduser);
-                return redirect('/dashboard');
+                return view('auth.dashboard');
             } else {
                 session([
                     'googleUser' => [
