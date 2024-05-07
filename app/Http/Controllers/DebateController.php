@@ -8,114 +8,49 @@ use Illuminate\Http\Request;
 
 class DebateController extends Controller
 {
-
-    public function showStep1Form()
-    {
-        return view('debate.debate-step1');
-    }
-
-    public function processStep1(Request $request)
+    public function finalSubmit(Request $request)
     {
         $request->validate([
             'isDebatePublic' => 'required|boolean',
-        ]);
-
-        // Store data in session or temporary storage
-        $request->session()->put('isDebatePublic', $request->isDebatePublic);
-
-        return redirect()->route('debate.step2');
-    }
-
-    public function showStep2Form()
-    {
-        return view('debate.debate-step2');
-    }
-
-    public function processStep2(Request $request)
-    {
-        $request->validate([
             'title' => 'required|string|max:255',
             'thesis' => 'required|string|max:255',
-        ]);
-    
-        // Retrieve data from session or temporary storage
-        $isDebatePublic = $request->session()->get('isDebatePublic');
-    
-        // Store data in session or temporary storage
-        $request->session()->put('title', $request->title);
-        $request->session()->put('thesis', $request->thesis);
-    
-        // Redirect to step 3
-        return redirect()->route('debate.step3');
-    }
-    
-
-    public function showStep3Form()
-    {
-        return view('debate.debate-step3');
-    }
-
-    public function processStep3(Request $request)
-    {
-        $request->validate([
             'isSingleThesis' => 'required|boolean',
-        ]);
-
-        // Retrieve data from session or temporary storage
-        $isDebatePublic = $request->session()->get('isDebatePublic');
-        $title = $request->session()->get('title');
-        $thesis = $request->session()->get('thesis');
-
-        // Store data in session or temporary storage
-        $request->session()->put('isSingleThesis', $request->isSingleThesis);
-
-        return redirect()->route('debate.step4');
-    }
-
-    public function showStep4Form()
-    {
-        return view('debate.debate-step4');
-    }
-
-    public function processStep4(Request $request)
-    {
-        $request->validate([
             'image' => 'required|image|max:2048',
             'tags' => 'required|string',
-            'backgroundinfo' => 'required|string',
         ]);
     
-        $user = auth('sanctum')->user();
+        // Store data in the session
+        $request->session()->put([
+            'isDebatePublic' => $request->isDebatePublic,
+            'title' => $request->title,
+            'thesis' => $request->thesis,
+            'isSingleThesis' => $request->isSingleThesis,
+            'tags' => $request->tags,
+            'backgroundinfo' => $request->backgroundinfo,
+        ]);
     
-        // Retrieve data from session or temporary storage
-        $isDebatePublic = $request->session()->get('isDebatePublic');
-        $isSingleThesis = $request->session()->get('isSingleThesis');
-        $title = $request->session()->get('title');
-        $thesis = $request->session()->get('thesis');
-    
-        // Store validated data in the database
+        // Handle image upload
         $imagePath = $request->file('image')->store('debate-images', 'public');
     
+        // Store data in the database
         Debate::create([
-            'user_id' => $user->id,
-            'title' => $title,
-            'thesis' => $thesis,
+            'user_id' => auth()->id(),
+            'title' => $request->title,
+            'thesis' => $request->thesis,
             'tags' => $request->tags,
             'backgroundinfo' => $request->backgroundinfo,
             'image' => $imagePath,
-            'isDebatePublic' => $isDebatePublic,
-            'isSingleThesis' => $isSingleThesis,
+            'isDebatePublic' => $request->isDebatePublic,
+            'isSingleThesis' => $request->isSingleThesis,
         ]);
     
-        // Clear session or temporary storage
-        $request->session()->forget('isDebatePublic');
-        $request->session()->forget('isSingleThesis');
-        $request->session()->forget('title');
-        $request->session()->forget('thesis');
+        // Clear session data
+        $request->session()->forget(['isDebatePublic', 'title', 'thesis', 'isSingleThesis', 'tags', 'backgroundinfo']);
     
-        // Redirect to a success page or dashboard
         return redirect()->route('home');
     }
+    
+    
     
 
 

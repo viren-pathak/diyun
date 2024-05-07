@@ -15,6 +15,25 @@
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
+        #multistep-form-container {
+            display: none; 
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #multistep-form-container .close-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -35,7 +54,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                     </li>
-                    <a href="{{ route('debate.step1') }}" class="nav-link">New +</a>
+                    <button onclick="openMultistepForm()">New +</button>
                     @endguest
                 </ul>
                 <!-- header.blade.php -->
@@ -136,6 +155,12 @@
         @yield('content')
     </div>
 
+    <div id="multistep-form-container">
+        <span class="close-icon" onclick="closeMultistepForm()">&#10006;</span>
+        @include('debate.multistep-form')
+    </div>
+
+
     <script>
         function openLoginForm() {
             var loginForm = document.getElementById("login-popup-form");
@@ -158,6 +183,16 @@
         function closeForm() {
             document.getElementById("login-popup-form").style.display = "none";
             document.getElementById("signup-popup-form").style.display = "none";
+        }
+
+        function openMultistepForm() {
+            var multistepFormContainer = document.getElementById("multistep-form-container");
+            multistepFormContainer.style.display =  "block";
+        }
+
+        function closeMultistepForm() {
+            var multistepFormContainer = document.getElementById("multistep-form-container");
+            multistepFormContainer.style.display = "none";
         }
 
     </script>

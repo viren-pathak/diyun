@@ -37,14 +37,9 @@ Route::get('reset-password', [UserController::class, 'showResetPasswordForm'])->
 Route::post('reset-password', [UserController::class, 'resetPassword'])->name('reset-password');
 
 
-Route::get('/debate/step1', [DebateController::class, 'showStep1Form'])->name('debate.step1');
-Route::post('/debate/step1', [DebateController::class, 'processStep1']);
-Route::get('/debate/step2', [DebateController::class, 'showStep2Form'])->name('debate.step2');
-Route::post('/debate/step2', [DebateController::class, 'processStep2']);
-Route::get('/debate/step3', [DebateController::class, 'showStep3Form'])->name('debate.step3');
-Route::post('/debate/step3', [DebateController::class, 'processStep3']);
-Route::get('/debate/step4', [DebateController::class, 'showStep4Form'])->name('debate.step4');
-Route::post('/debate/step4', [DebateController::class, 'processStep4']);
+Route::post('/debate/final-submit', [DebateController::class, 'finalSubmit'])->name('debate.finalSubmit');
+
+
 
 Route::get('/', [DebateController::class, 'getAllDebates'])->name('home');
 
