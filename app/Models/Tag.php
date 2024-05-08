@@ -11,7 +11,12 @@ class Tag extends Model
 
     protected $fillable = [
         'tag', 
-        'tag_image'
+        'tag_image',
+        'tag_description'
     ];
     
+    public function debates()
+    {
+        return $this->belongsToMany(Debate::class);
+    }
 }

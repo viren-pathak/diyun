@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('tag')->unique(); // Unique constraint to avoid duplicates
             $table->string('tag_image')->nullable();
+            $table->string('tag_description')->nullable();
             $table->timestamps();
         });
     }

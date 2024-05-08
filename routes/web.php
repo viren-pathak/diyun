@@ -41,5 +41,7 @@ Route::post('/debate/create-debate', [DebateController::class, 'createDebate'])-
 
 
 
-Route::get('/', [DebateController::class, 'getAllDebates'])->name('home');
+Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
 
+Route::get('/tags/{tag}', [DebateController::class, 'getDebatesByTag'])->name('tags.single');
+Route::get('tags', [DebateController::class, 'getAllTags'])->name('tags');
