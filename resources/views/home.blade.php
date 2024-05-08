@@ -1,6 +1,8 @@
 @extends('header')
 @section('content')
-<h1>DIYUN</h1>
+<div class="home-banner">
+    <h1>DIYUN</h1>
+</div>
 <div>
     <ul class="card-grid">
         @foreach($debates as $debate)

@@ -1,4 +1,4 @@
-<form id="multistep-form" method="post" action="{{ route('debate.finalSubmit') }}" enctype="multipart/form-data">
+<form id="multistep-form" method="post" action="{{ route('debate.createDebate') }}" enctype="multipart/form-data">
     @csrf
 
     <!-- Step 1 -->
@@ -43,7 +43,7 @@
         <h2>Image / Tags / Background Info</h2><br>
         <label>Image</label><br>
         <input type="file" name="image"><br>
-        <label>Tags</label><br>
+        <label>Tags (Separated by commas)</label><br>
         <input type="text" name="tags"><br>
         <label>Background Info (Optional)</label><br>
         <textarea name="backgroundinfo"></textarea><br>

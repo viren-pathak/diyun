@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class DebateController extends Controller
 {
-    public function finalSubmit(Request $request)
+    public function createDebate(Request $request)
     {
         $request->validate([
             'isDebatePublic' => 'required|boolean',
@@ -31,13 +31,31 @@ class DebateController extends Controller
     
         // Handle image upload
         $imagePath = $request->file('image')->store('debate-images', 'public');
-    
+
+        // Convert tags string to an array
+        $tags = explode(',', $request->tags);
+
+        // Convert tags array to JSON
+        $tagsJson = json_encode($tags);
+            // Store unique tags in the tags table
+        foreach ($tags as $tag) {
+            $existingTag = Tag::where('tag', $tag)->first();
+
+            if (!$existingTag) {
+                // Tag does not exist, insert it
+                Tag::create([
+                    'tag' => $tag,
+                    // Add tag_image if needed
+                ]);
+            }
+        }
+        
         // Store data in the database
         Debate::create([
             'user_id' => auth()->id(),
             'title' => $request->title,
             'thesis' => $request->thesis,
-            'tags' => $request->tags,
+            'tags' => $tagsJson,
             'backgroundinfo' => $request->backgroundinfo,
             'image' => $imagePath,
             'isDebatePublic' => $request->isDebatePublic,

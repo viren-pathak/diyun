@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('side')->nullable(); 
             $table->string('title');
             $table->string('thesis')->nullable();
-            $table->text('tags')->nullable();
+            $table->json('tags')->nullable();
             $table->string('backgroundinfo')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();

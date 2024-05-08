@@ -37,7 +37,7 @@ Route::get('reset-password', [UserController::class, 'showResetPasswordForm'])->
 Route::post('reset-password', [UserController::class, 'resetPassword'])->name('reset-password');
 
 
-Route::post('/debate/final-submit', [DebateController::class, 'finalSubmit'])->name('debate.finalSubmit');
+Route::post('/debate/create-debate', [DebateController::class, 'createDebate'])->name('debate.createDebate');
 
 
 
