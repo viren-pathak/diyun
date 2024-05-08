@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DebateController;
+use App\Http\Controllers\BaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,3 +46,13 @@ Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
 
 Route::get('/tags/{tag}', [DebateController::class, 'getDebatesByTag'])->name('tags.single');
 Route::get('tags', [DebateController::class, 'getAllTags'])->name('tags');
+
+
+
+/***** ROUTES FOR static PAGES *****/
+
+Route::get('/about', [Basecontroller::class, 'about'])->name('about.page');
+Route::get('/privacy', [Basecontroller::class, 'Privacy_Policy'])->name('Privacy.page');
+Route::get('/contact', [Basecontroller::class, 'contact'])->name('contact.page');
+Route::get('/help', [Basecontroller::class, 'help'])->name('help.page');
+Route::get('/search', [Basecontroller::class, 'search'])->name('search.page');

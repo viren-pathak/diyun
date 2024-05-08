@@ -1,4 +1,4 @@
-@extends('header')
+@extends('page.master')
 @section('content')
 <h2>Forgot Password</h2>
 <form method="POST" action="{{ route('reset-password') }}">

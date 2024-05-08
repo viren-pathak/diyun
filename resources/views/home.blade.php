@@ -1,14 +1,13 @@
-@extends('header')
+@extends('page.master')
 @section('content')
 <div class="home-banner">
-    <h1>DIYUN</h1>
+    <h1>Explore Debates</h1>
     <ul>
         @foreach($latestTags as $tag)
             <li><a href="{{ route('tags.single', ['tag' => $tag->tag]) }}">{{ $tag->tag }}</a></li>
         @endforeach
     </ul>
     <a href="{{ route('tags') }}" class="btn btn-primary">See More</a>
-
 </div>
 <div>
     <ul class="card-grid">

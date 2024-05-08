@@ -1,0 +1,270 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    font-size: 16px;
+    color: #000;
+    direction: rtl;
+    padding: 0;
+}
+
+:root {
+    --global1: #000;
+    --global2: #fff;
+    --global3: #0069e0;
+}
+  h1 {
+    font-size: 40px;
+  }
+  h2 {
+    font-size: 30px;
+    color: #6c757d;
+  }
+  h3 {
+    font-size: 30px;
+  }
+  .flex {
+    display: flex;
+    gap: 25px;
+  }
+  .flex-align-center {
+    align-items: center;
+  }
+  .flex-justify-center {
+    justify-content: center;
+  }
+  .flex-justify-start {
+    justify-content: flex-start;
+  }
+  .flex-justify-end {
+    justify-content: flex-end;
+  }
+  .flex-justify-between {
+    justify-content: space-between;
+  }
+  .flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .flex-column {
+    flex-direction: column;
+  }
+  li {
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+  }
+  .d-block {
+    display: block;
+    margin: auto;
+  }
+  button {
+    padding: 5px 15px;
+    border-radius: 6px;
+    outline: 0;
+    border: 1px solid #fff;
+    background: transparent;
+    transition: 0.3s;
+  }
+  button:hover {
+    background: #fff;
+    color: #000;
+  }
+  .row {
+    padding: 30px 20px 30px 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  .white-text * {
+    color: #fff;
+  }
+
+   /*---------------------------------------------
+  ------------------- HEADER --------------------
+  ----------------------------------------------*/
+  .profile {
+    height: 40px;
+    background: #619abc;
+    width: 40px;
+    border-radius: 50px;
+  }
+  header {
+    padding: 15px 20px 15px 20px;
+    background: #074e9c;
+    position: sticky;
+    top: 0;
+  }
+  header li a:after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 1px;
+    background: #fff;
+    left: 0;
+    bottom: -4px;
+    transition: 0.3s;
+  }
+
+  header li a {
+    position: relative;
+  }
+  header li a:hover:after {
+    width: 100%;
+  }
+  header:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    height: 100%;
+    z-index: -1;
+    top: -100%;
+    transition: 0.2s;
+    left: 0;
+  }
+
+  header.scrolled:after {
+    top: 0%;
+  }
+  header.scrolled * {
+    color: #000;
+  }
+
+  header.scrolled button {
+    color: #0069e0;
+    border-color: #0069e0;
+  }
+
+  header.scrolled button:hover {
+    background: #0069e0;
+    color: #fff;
+  }
+
+  header img.blue,
+  header.scrolled .white {
+    display: none;
+  }
+
+  header img.white,
+  header.scrolled .blue {
+    display: block;
+  }
+
+  header.scrolled li a:after {
+    background: #000;
+  }
+  header i.fa.fa-search {
+    transform: scaleX(-1);
+  }
+  header .menu-div ul {
+    column-gap: 50px;
+  }
+
+
+  /*---------------------------------------------
+  ------------------- FOOTER --------------------
+  ----------------------------------------------*/
+  footer ul a:hover {
+    color: var(--global3);
+  }
+  footer .footer-menu-1 {
+    max-width: 1000px;
+  }
+  .footer-menu-2 .col {
+    max-width: 650px;
+    margin: auto;
+  }
+  .footer-menu-2 {
+    border-top: 1px solid #00000036;
+    border-bottom: 1px solid #00000036;
+  }
+  footer .footer-social i {
+    font-size: 30px;
+    color: #6c757d;
+  }
+  footer section.footer-bg {
+    background-image: url(https://diyun.jmbliss.com/static/media/new-white-footer.5cef0c82b98decd934bc.png);
+    padding-top: 10%;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: contain;
+  }
+  @media (max-width: 767px) {
+    h1 {
+      font-size: 35px;
+    }
+    h2 {
+      font-size: 25px;
+    }
+    h3 {
+      font-size: 20px;
+    }
+    .menu-div {
+      position: fixed;
+      bottom: 0;
+      background: #133153;
+      width: 100%;
+      left: 0;
+      text-align: center;
+      padding: 10px 20px;
+    }
+
+    .menu-div ul {
+      padding: 0;
+      justify-content: space-between;
+    }
+    .menu-div ul a ,.menu-div ul i{
+      color: #fff;
+    }
+    .footer-menu {
+      row-gap: 40px;
+      flex-direction: column;
+    }
+    footer .footer-menu-1,
+    .footer-menu-2 .col {
+      flex-direction: column;
+      row-gap: 30px;
+    }
+    .footer-social {
+      justify-content: center;
+    }
+    footer section.footer-bg {
+      padding-bottom: 40px;
+      background-size: cover;
+    }
+  }
+
+
+.login-form, .signup-form {
+    display: none; /* Hidden by default */
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#multistep-form-container {
+    display: none; 
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#multistep-form-container .close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}

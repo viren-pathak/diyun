@@ -1,4 +1,4 @@
-@extends('header')
+@extends('page.master')
 @section('content')
 <form method="POST" action="{{ route('complete-google-registration') }}">
     @csrf

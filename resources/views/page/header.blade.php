@@ -1,67 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Diyun</title>
-    <style>
-        .login-form, .signup-form {
-            display: none; /* Hidden by default */
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border: 3px solid #f1f1f1;
-            z-index: 9;
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
 
-        #multistep-form-container {
-            display: none; 
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 9;
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+    <header>
+        <div class=" header-row flex flex-align-center flex-justify-between white-text">
+            <div class="col-1 flex flex-align-center flex-justify-end">
+                <div class="logo-div">
+                    <a href="{{ route('home') }}"><img class="white" src="{{ asset('uploads/White-logo.png')}}" alt="logo" style="width: 80px" /></a>
+                    
+                    <a href="{{ route('home') }}"><img class="blue" src="{{ asset('uploads/Blue-logo.png')}}" alt="logo" style="width: 80px" /></a>
+                </div>
+                <div class="menu-div">
+                    <ul class="flex flex-align-center">
+                        <li><a href="#">My</a></li>
+                        <li><a href="#">Explore</a></li>
+                        <li><a href="{{ route('search.page') }}"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                    </ul>
+                </div>
+            </div>
 
-        #multistep-form-container .close-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="{{'/'}}">Diyun</a>
-
-            <div class="navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+            <div class="col-2 flex flex-align-center flex-justify-end">
+                <div class="profile"></div>
                     @guest
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="openLoginForm()">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="openSignupForm()">Signup</a>
-                    </li>
-                    @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('logout') }}">Logout</a>
-                    </li>
-                    <button onclick="openMultistepForm()">New +</button>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="openLoginForm()">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="openSignupForm()">Signup</a>
+                        </li>
                     @endguest
-                </ul>
-                <!-- header.blade.php -->
+                    @auth
+                        <button onclick="openMultistepForm()">New +</button>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+                        </li>
 
+                    @endauth
+                </div>
             </div>
         </div>
-    </nav>
+    </header>
+
 
     <div class="login-form" id="login-popup-form">
         <div class="cotainer">
@@ -151,50 +127,8 @@
         </div>
     </div>
 
-    <div class="container mt-5">
-        @yield('content')
-    </div>
 
     <div id="multistep-form-container">
         <span class="close-icon" onclick="closeMultistepForm()">&#10006;</span>
         @include('debate.multistep-form')
     </div>
-
-
-    <script>
-        function openLoginForm() {
-            var loginForm = document.getElementById("login-popup-form");
-            var signupForm = document.getElementById("signup-popup-form");
-            if (signupForm.style.display === "block") {
-                signupForm.style.display = "none";
-            }
-            loginForm.style.display = "block";
-        }
-
-        function openSignupForm() {
-            var signupForm = document.getElementById("signup-popup-form");
-            var loginForm = document.getElementById("login-popup-form");
-            if (loginForm.style.display === "block") {
-                loginForm.style.display = "none";
-            }
-            signupForm.style.display = "block";
-        }
-
-        function closeForm() {
-            document.getElementById("login-popup-form").style.display = "none";
-            document.getElementById("signup-popup-form").style.display = "none";
-        }
-
-        function openMultistepForm() {
-            var multistepFormContainer = document.getElementById("multistep-form-container");
-            multistepFormContainer.style.display =  "block";
-        }
-
-        function closeMultistepForm() {
-            var multistepFormContainer = document.getElementById("multistep-form-container");
-            multistepFormContainer.style.display = "none";
-        }
-
-    </script>
-</body>
-</html>
