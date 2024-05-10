@@ -14,14 +14,17 @@
     --global3: #0069e0;
 }
   h1 {
-    font-size: 40px;
+    font-size: 50px;
   }
   h2 {
-    font-size: 30px;
+    font-size: 45px;
     color: #6c757d;
   }
   h3 {
     font-size: 30px;
+  }
+  h4 {
+    font-size: 1.5rem;
   }
   .flex {
     display: flex;
@@ -72,6 +75,15 @@
     background: #fff;
     color: #000;
   }
+
+.container {
+  margin: auto !important;
+  max-width: 1320px !important;
+  overflow: hidden;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
   .row {
     padding: 30px 20px 30px 20px;
     max-width: 1200px;
@@ -95,6 +107,7 @@
     background: #074e9c;
     position: sticky;
     top: 0;
+    z-index: 99999;
   }
   header li a:after {
     position: absolute;
@@ -267,4 +280,158 @@
     top: 10px;
     right: 10px;
     cursor: pointer;
+}
+
+
+
+  /*----------------------------------------------
+  ------------------- HOME PAGE ------------------
+  ----------------------------------------------*/
+
+section.home-banner{
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 70px 0;
+}
+
+section.home-banner .container {
+  display:flex;
+  flex-direction: column;
+}
+
+section.home-banner h1 {
+      color: #fff;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  text-align:center;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 56px;
+  margin-bottom: 15px;
+}
+
+ul.tag-flex-wrap {
+  display:flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.tags-btn a{
+  border: 1px solid #fff;
+  border-radius: 50px;
+  color: #fff;
+  margin-bottom: 15px !important;
+  margin-right: .5rem !important;
+  margin-left: .5rem !important;
+  padding: 5px 18px;
+  transition: .5s;
+}
+
+.btn.tag-page-redi {
+  color: #fff;
+  text-decoration: underline !important;
+  text-align: center !important;
+  width: fit-content;
+  margin: auto;
+}
+
+
+
+
+
+  /*----------------------------------------------
+  ------------------- TAGS PAGE ------------------
+  ----------------------------------------------*/
+
+  section.tags-page-banner {
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 70px 0;
+}
+
+.tags-page-banner h2.explore-page__headline {
+    color: #fff;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    text-align:center;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    margin-top: 56px;
+}
+
+.tag-card-grid {
+    grid-gap: 30px;
+    display: grid;
+    gap: 30px;
+    grid-auto-rows: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    margin: auto;
+    max-width: 1225px;
+    overflow: hidden;
+}
+
+.mt-5 {
+    margin-top: 3rem !important;
+}
+
+.tag-card-glob{
+    background-size:cover;
+    border-radius:5px;
+background-color:#0662ab;
+}
+
+h4.fw-bold {
+    padding: 3rem !important;
+    color: #fff;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    text-align:center;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: capitalize;
+}
+
+
+  /*----------------------------------------------
+  --------------- TAG SINGLE PAGE ----------------
+  ----------------------------------------------*/
+
+  section.tag-single-banner {
+    padding: 6rem 0px!important;
+    background-color:#0662ab;
+    background-position: center;
+    display: block;
+    position: relative;
+
+}
+
+section.tag-single-banner::after {
+  content: "";
+  background: rgb(0 0 0 / 30%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+section.tag-single-banner .container{
+  z-index: 99;
+  position: relative;
+}
+
+section.tag-single-banner h1 {
+    color: #fff;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    text-align:center;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+
+section.tag-single-banner p {
+    color: #fff;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    text-align:center;
+    line-height: 1.2;
 }
