@@ -18,10 +18,19 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'profile_picture',
         'name',
         'username',
         'email',
         'password',
+        'role',
+        'isProfilePrivate',
+        'total_claims',
+        'total_votes',
+        'total_comments',
+        'total_contributions',
+        'total_received_thanks',
+        'biography',
         'google_id'
     ];
 

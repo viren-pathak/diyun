@@ -95,8 +95,31 @@ class DebateController extends Controller
     }
     
     
+    public function getSumData()
+    {
+        // Get the sum of total_claims, total_votes, and total_contributions
+        $sumData = [
+            'total_claims' => User::sum('total_claims'),
+            'total_votes' => User::sum('total_votes'),
+            'total_contributions' => User::sum('total_contributions'),
+        ];
     
-
+        // Get the count of debates with parent_id as null
+        $debateCount = Debate::whereNull('parent_id')->count();
+    
+        // Add the count of debates to the sum data
+        $sumData['debate_count'] = $debateCount;
+    
+        return $sumData; // Return just the data, not the view
+    }
+    
+    public function getTopContributors()
+    {
+        // Retrieve top contributors from the users table in descending order of total_contributions
+        $topContributors = User::orderBy('total_contributions', 'desc')->take(20)->get();
+    
+        return $topContributors;
+    }
 
     public function getHomeData(Request $request)
     {
@@ -109,7 +132,13 @@ class DebateController extends Controller
             return $debate;
         });
     
-        return view('home', compact('latestTags', 'debates'));
+        // Get sum data
+        $sumData = $this->getSumData();
+
+        // Get sum data
+        $topContributors = $this->getTopContributors();
+        
+        return view('home', compact('latestTags', 'debates', 'sumData', 'topContributors'));
     }
     
     
