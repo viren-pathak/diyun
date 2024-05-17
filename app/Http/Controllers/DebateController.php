@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Debate;
 use App\Models\User;
 use App\Models\Tag;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class DebateController extends Controller
@@ -52,10 +54,18 @@ class DebateController extends Controller
             }
         }
 
+        // Generate a unique slug
+        $slug = Str::slug($request->title);
+        $existingSlugCount = Debate::where('slug', 'like', "{$slug}%")->count();
+        if ($existingSlugCount > 0) {
+            $slug .= '-' . ($existingSlugCount + 1);
+        }
+
         // Store data in the database
         Debate::create([
             'user_id' => auth()->id(),
             'title' => $request->title,
+            'slug' => $slug,
             'thesis' => $request->thesis,
             'tags' => $tagsJson,
             'backgroundinfo' => $request->backgroundinfo,
@@ -70,6 +80,18 @@ class DebateController extends Controller
         return redirect()->route('home');
     }
     
+    public function single($slug)
+    {
+        // Find the debate by slug
+        $debate = Debate::where('slug', $slug)->firstOrFail();
+    
+        // Find the pros and cons for this debate
+        $pros = Debate::where('parent_id', $debate->id)->where('side', 'pro')->get();
+        $cons = Debate::where('parent_id', $debate->id)->where('side', 'con')->get();
+    
+        // Pass the debate, pros, and cons data to the view
+        return view('debate.single', compact('debate', 'pros', 'cons'));
+    }
     
     
     public function getDebatesByTag(Request $request, $tagName)
@@ -147,5 +169,42 @@ class DebateController extends Controller
         $tags = Tag::orderBy('tag')->get();
         return view('tags.all', compact('tags'));
     }
+
+
+
+    public function addPro(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $debate = new Debate();
+        $debate->user_id = Auth::id();
+        $debate->title = $request->input('title');
+        $debate->side = 'pro'; // Indicate this is a pro argument
+        $debate->slug = Str::slug($request->input('title'));
+        $debate->parent_id = $id;
+        $debate->save();
+
+        return redirect()->back()->with('success', 'Pro argument added successfully');
+    }
+
+    public function addCon(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $debate = new Debate();
+        $debate->user_id = Auth::id();
+        $debate->title = $request->input('title');
+        $debate->side = 'con'; // Indicate this is a con argument
+        $debate->slug = Str::slug($request->input('title'));
+        $debate->parent_id = $id;
+        $debate->save();
+
+        return redirect()->back()->with('success', 'Con argument added successfully');
+    }
+
 
 }

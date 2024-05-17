@@ -17,6 +17,7 @@ class Debate extends Model
         'parent_id',
         'root_id',
         'title',
+        'slug',
         'side',
         'thesis',
         'tags',

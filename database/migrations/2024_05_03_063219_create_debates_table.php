@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('parent_id')->nullable()->constrained('debate', 'id')->onDelete('cascade');
             $table->string('side')->nullable(); 
             $table->string('title');
+            $table->string('slug')->unique();
             $table->string('thesis')->nullable();
             $table->json('tags')->nullable();
             $table->string('backgroundinfo')->nullable();
