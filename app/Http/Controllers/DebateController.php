@@ -178,11 +178,18 @@ class DebateController extends Controller
             'title' => 'required|string|max:255',
         ]);
 
+        // Generate a unique slug for the pro argument
+        $slug = Str::slug($request->input('title'));
+        $existingSlugCount = Debate::where('slug', 'like', "{$slug}%")->count();
+        if ($existingSlugCount > 0) {
+            $slug .= '-' . ($existingSlugCount + 1);
+        }
+    
         $debate = new Debate();
         $debate->user_id = Auth::id();
         $debate->title = $request->input('title');
         $debate->side = 'pro'; // Indicate this is a pro argument
-        $debate->slug = Str::slug($request->input('title'));
+        $debate->slug = $slug;
         $debate->parent_id = $id;
         $debate->save();
 
@@ -195,11 +202,18 @@ class DebateController extends Controller
             'title' => 'required|string|max:255',
         ]);
 
+        // Generate a unique slug for the con argument
+        $slug = Str::slug($request->input('title'));
+        $existingSlugCount = Debate::where('slug', 'like', "{$slug}%")->count();
+        if ($existingSlugCount > 0) {
+            $slug .= '-' . ($existingSlugCount + 1);
+        }
+    
         $debate = new Debate();
         $debate->user_id = Auth::id();
         $debate->title = $request->input('title');
         $debate->side = 'con'; // Indicate this is a con argument
-        $debate->slug = Str::slug($request->input('title'));
+        $debate->slug = $slug;
         $debate->parent_id = $id;
         $debate->save();
 

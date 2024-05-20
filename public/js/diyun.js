@@ -38,7 +38,7 @@ function closeMultistepForm() {
   ------------------- SINGLE DEBATE PAGE  --------------------
   ----------------------------------------------*/
 
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const proBtn = document.querySelector('.add-pro-btn');
     const consBtn = document.querySelector('.add-cons-btn');
     const proForm = document.querySelector('.add-pro-form');
@@ -47,12 +47,26 @@ function closeMultistepForm() {
     const charCounts = document.querySelectorAll('.char-count');
     const inputs = document.querySelectorAll('input[name="title"]');
 
+    function openLoginForm() {
+        document.getElementById('login-popup-form').style.display = 'block';
+    }
+
     proBtn.addEventListener('click', function() {
+        const isAuthenticated = proBtn.getAttribute('data-authenticated') === '1';
+        if (!isAuthenticated) {
+            openLoginForm();
+            return;
+        }
         consForm.style.display = 'none'; // Close cons form if open
         proForm.style.display = 'block';
     });
 
     consBtn.addEventListener('click', function() {
+        const isAuthenticated = consBtn.getAttribute('data-authenticated') === '1';
+        if (!isAuthenticated) {
+            openLoginForm();
+            return;
+        }
         proForm.style.display = 'none'; // Close pro form if open
         consForm.style.display = 'block';
     });
@@ -64,8 +78,16 @@ function closeMultistepForm() {
     });
 
     document.addEventListener('click', function(event) {
-        if (!event.target.closest('.add-pro-form') && !event.target.closest('.add-cons-form') && !event.target.closest('.add-pro-btn') && !event.target.closest('.add-cons-btn')) {
+        const isProForm = proForm.contains(event.target);
+        const isConsForm = consForm.contains(event.target);
+        const isProBtn = proBtn.contains(event.target);
+        const isConsBtn = consBtn.contains(event.target);
+
+        if (!isProForm && !isProBtn) {
             proForm.style.display = 'none';
+        }
+
+        if (!isConsForm && !isConsBtn) {
             consForm.style.display = 'none';
         }
     });

@@ -38,9 +38,8 @@
         </div>
     </header>
 
-
-    <div class="login-form" id="login-popup-form">
-        <div class="cotainer">
+    <div class="login-form" id="login-popup-form" style="display: none;">
+        <div class="container">
             <div class="card">
                 <a href="{{ route('login.google') }}" class="btn btn-danger">Continue with Google</a>
                 <div class="card-header text-center">
@@ -83,9 +82,8 @@
         </div>
     </div>
 
-
-    <div class="signup-form" id="signup-popup-form">
-        <div class="cotainer">
+    <div class="signup-form" id="signup-popup-form" style="display: none;">
+        <div class="container">
             <div class="card">
                 <a href="{{ route('login.google') }}" class="btn btn-danger">Continue with Google</a>
                 <div class="card-header text-center">
@@ -127,8 +125,7 @@
         </div>
     </div>
 
-
-    <div id="multistep-form-container">
+    <div id="multistep-form-container" style="display: none;">
         <span class="close-icon" onclick="closeMultistepForm()">&#10006;</span>
         @include('debate.multistep-form')
     </div>

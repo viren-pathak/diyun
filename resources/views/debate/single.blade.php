@@ -29,7 +29,7 @@
                         <div class="columns-container__column-headers">
                             <div class="column-box column-box--pro">
                                 <p class="column-box--pro--info">Pros</p>
-                                <button type="button" class="btn-danger btn add-pro-btn">+</button>
+                                <button type="button" class="btn-danger btn add-pro-btn" data-authenticated="{{ auth()->check() }}">+</button>
                                 <div class="add-pro-form" style="display:none;">
                                     <form action="{{ route('debate.addPro', $debate->id) }}" method="POST">
                                         @csrf
@@ -50,7 +50,7 @@
 
                             <div class="column-box column-box--con">
                                 <p class="column-box--con--info">Cons</p>
-                                <button type="button" class="btn-danger btn add-cons-btn">+</button>
+                                <button type="button" class="btn-danger btn add-cons-btn" data-authenticated="{{ auth()->check() }}">+</button>
                                 <div class="add-con-form" style="display:none;">
                                     <form action="{{ route('debate.addCon', $debate->id) }}" method="POST">
                                         @csrf
