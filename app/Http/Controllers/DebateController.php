@@ -85,12 +85,31 @@ class DebateController extends Controller
         // Find the debate by slug
         $debate = Debate::where('slug', $slug)->firstOrFail();
     
+        // Get the selected claim's title
+        $selectedClaimTitle = $debate->title;
+    
         // Find the pros and cons for this debate
         $pros = Debate::where('parent_id', $debate->id)->where('side', 'pro')->get();
         $cons = Debate::where('parent_id', $debate->id)->where('side', 'con')->get();
     
-        // Pass the debate, pros, and cons data to the view
-        return view('debate.single', compact('debate', 'pros', 'cons'));
+        // Pass the debate, pros, cons, and selected claim title data to the view
+        return view('debate.single', compact('debate', 'pros', 'cons', 'selectedClaimTitle'));
+    }
+    
+    
+    
+
+    public function getChildArguments($slug)
+    {
+        // Find the debate by slug
+        $debate = Debate::where('slug', $slug)->firstOrFail();
+        
+        // Find child debates for the selected debate's ID
+        $pros = Debate::where('parent_id', $debate->id)->where('side', 'pro')->get();
+        $cons = Debate::where('parent_id', $debate->id)->where('side', 'con')->get();
+        
+        // Return child debates as JSON response
+        return response()->json(['pros' => $pros, 'cons' => $cons]);
     }
     
     
@@ -178,6 +197,9 @@ class DebateController extends Controller
             'title' => 'required|string|max:255',
         ]);
 
+        // Find the root debate ID
+        $rootId = $this->findRootId($id);
+    
         // Generate a unique slug for the pro argument
         $slug = Str::slug($request->input('title'));
         $existingSlugCount = Debate::where('slug', 'like', "{$slug}%")->count();
@@ -191,6 +213,7 @@ class DebateController extends Controller
         $debate->side = 'pro'; // Indicate this is a pro argument
         $debate->slug = $slug;
         $debate->parent_id = $id;
+        $debate->root_id = $rootId; // Set the root debate ID
         $debate->save();
 
         return redirect()->back()->with('success', 'Pro argument added successfully');
@@ -202,6 +225,9 @@ class DebateController extends Controller
             'title' => 'required|string|max:255',
         ]);
 
+        // Find the root debate ID
+        $rootId = $this->findRootId($id);
+    
         // Generate a unique slug for the con argument
         $slug = Str::slug($request->input('title'));
         $existingSlugCount = Debate::where('slug', 'like', "{$slug}%")->count();
@@ -215,10 +241,25 @@ class DebateController extends Controller
         $debate->side = 'con'; // Indicate this is a con argument
         $debate->slug = $slug;
         $debate->parent_id = $id;
+        $debate->root_id = $rootId; // Set the root debate ID
         $debate->save();
 
         return redirect()->back()->with('success', 'Con argument added successfully');
     }
+    
+    // Helper method to find the root debate ID
+    private function findRootId($id)
+    {
+        $debate = Debate::findOrFail($id);
+    
+        // Traverse up the parent chain until we find the root debate
+        while ($debate->parent_id !== null) {
+            $debate = Debate::findOrFail($debate->parent_id);
+        }
+    
+        return $debate->id;
+    }
+    
 
 
 }

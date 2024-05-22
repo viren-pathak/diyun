@@ -40,6 +40,7 @@ Route::post('reset-password', [UserController::class, 'resetPassword'])->name('r
 
 Route::post('/debate/create-debate', [DebateController::class, 'createDebate'])->name('debate.createDebate');
 Route::get('/debate/{slug}', [DebateController::class, 'single'])->name('debate.single');
+Route::get('/debate/{id}/children', [DebateController::class, 'getChildArguments'])->name('debate.children');
 
 
 Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
