@@ -41,8 +41,8 @@ function closeMultistepForm() {
 document.addEventListener('DOMContentLoaded', function() {
     const proBtn = document.querySelector('.add-pro-btn');
     const consBtn = document.querySelector('.add-cons-btn');
-    const proForm = document.querySelector('.add-pro-form');
-    const consForm = document.querySelector('.add-con-form');
+    const proForm = document.querySelector('.add-pro-form-container');
+    const consForm = document.querySelector('.add-con-form-container');
     const closeBtns = document.querySelectorAll('.close-form-btn');
     const charCounts = document.querySelectorAll('.char-count');
     const inputs = document.querySelectorAll('input[name="title"]');

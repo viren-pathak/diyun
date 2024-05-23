@@ -573,3 +573,214 @@ section.tag-single-banner p {
     text-align:center;
     line-height: 1.2;
 }
+
+
+
+  /*----------------------------------------------
+  --------------- DEBATE SINGLE PAGE ----------------
+  ----------------------------------------------*/
+
+  section.debate-single-content {
+    background-color:rgb(242, 244, 245);
+}
+
+.content__body-container {
+    width:100%;
+    max-width:1000px;
+    margin: auto;
+    margin-top:100px;
+    margin-bottom:200px
+}
+
+.claim-card {
+    padding: 20px;
+    border-radius:10px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.selected-claim .claim-card{
+    border:2px solid #1d67ac;
+}
+
+
+.columns-container{
+    margin-top:20px;
+}
+
+.columns-container__column-headers {
+    display:flex;
+    
+}
+
+.column-box.column-box--header--pro,
+.column-box.column-box--header--con {
+    width: 50%;
+}
+
+.column-box--header--pro--contents,
+.column-box--header--con--contents{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    width: 100%;
+    padding: 5px;
+    border:1px solid #dee2e6;
+    border-radius:10px;
+    background-color: #fff;
+    align-items: center;
+}
+
+.column-box.column-box--header--pro{
+    margin-left:5px;
+}
+
+.column-box.column-box--header--con{
+    margin-right:5px;
+}
+
+p.column-box--pro--info,
+p.column-box--con--info {
+    width:75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+p.column-box--pro--info{
+    color:#198754;
+}
+
+p.column-box--con--info{
+    color:#dc3545;
+}
+
+button.btn-danger.btn.add-pro-btn {
+    font-size: 25px;
+    color:white;
+    background-color:#198754;
+    padding: 0px 12px 5px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+button.btn-danger.btn.add-cons-btn {
+        font-size: 25px;
+    color:white;
+    background-color:#dc3545;
+    padding: 0px 12px 5px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.columns-container__column-contents {
+    display: flex;
+    margin-top: 10px;
+}
+
+.column-box.column-box--claims{
+    width:50%;
+}
+
+.column-box--claims-pro {
+    margin-left:5px;
+}
+
+.column-box--claims-con {
+    margin-right:5px;
+}
+
+.column-box--claims-con .claim-card:hover{
+    border:1px solid #dc3545;
+}
+
+.column-box--claims-pro .claim-card:hover{
+    border:1px solid #198754;
+}
+
+.add-child-form-container {
+    margin-top:10px;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 10px;
+}
+
+.add-child-form-container input.child-form-input {
+    width:100%;
+    height: 150px;
+    color: #656f7b;
+    cursor: text;
+    font-weight: 300;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid;
+}
+
+.add-con-form input.child-form-input{
+    border-color:#dc3545;
+}
+
+.add-pro-form input.child-form-input{
+    border-color:#198754;
+}
+
+.add-child-form-container p.char-count {
+    font-size: 12px;
+    padding: 5px;
+    color: #074e9c;
+    font-weight: 600;
+}
+
+.add-child-form-container button.child-form-submit {
+    padding: 15px;
+    margin-left: 20px;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #074e9c;
+    border: 1px solid #074e9c;
+    cursor: pointer;
+}
+
+.add-child-form-container button.child-form-submit:hover{
+    color: #fff;
+    background-color:#074e9c;
+}
+
+.add-child-form-container button.close-form-btn {
+    padding: 15px;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #656f7b;
+    border: 1px solid #656f7b;
+    cursor: pointer;
+}
+
+.add-child-form-container button.close-form-btn:hover{
+    color: #fff;
+    background-color:#656f7b; 
+}
+
+
+.actionable-claim .claim-card.child-claim-card {
+    margin-bottom:10px
+}
+
+.ancestor-stack {
+  min-width: 508px;
+  width: 50%;
+  margin:auto;
+  margin-bottom:10px;
+}
+
+
+.ancestor-claim-container .ancestor-claim:not(:last-child) {
+  margin-bottom:10px;
+}
+
+.ancestor-claim-container .ancestor-claim{
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border-radius:10px
+}

@@ -19,16 +19,20 @@
                         }
                         $ancestors[] = $currentDebate;
                     @endphp
-                    @foreach(array_reverse($ancestors) as $ancestor)
-                        @if($ancestor->id !== $debate->id) {{-- Exclude selected debate from ancestor stack --}}
-                            <div class="claim-card" data-debate-id="{{ $ancestor->id }}" data-debate-slug="{{ $ancestor->slug }}"> {{-- Add data-debate-slug attribute --}}
-                                <div class="claim-header"></div>
-                                <div class="claim-text">
-                                    <p class="claim-text__content">{{ $ancestor->title }}</p>
+                    <div class="ancestor-claim-container">
+                        @foreach(array_reverse($ancestors) as $ancestor)
+                            @if($ancestor->id !== $debate->id) {{-- Exclude selected debate from ancestor stack --}}
+                                <div class="ancestor-claim">
+                                    <div class="claim-card" data-debate-id="{{ $ancestor->id }}" data-debate-slug="{{ $ancestor->slug }}"> {{-- Add data-debate-slug attribute --}}
+                                        <div class="claim-header"></div>
+                                        <div class="claim-text">
+                                            <p class="claim-text__content">{{ $ancestor->title }}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        @endif
-                    @endforeach
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
                 
                 <main class="content__selected-and-columns">
@@ -48,28 +52,32 @@
                     <div class="columns-container">
                         <div class="columns-container__column-headers">
                             <div class="column-box column-box--header--pro">
-                                <p class="column-box--pro--info">Pros</p>
-                                <button type="button" class="btn-danger btn add-pro-btn" data-authenticated="{{ auth()->check() }}">+</button>
-                                <div class="add-pro-form" style="display:none;">
+                                <div class="column-box--header--pro--contents">
+                                    <p class="column-box--pro--info">Pros</p>
+                                    <button type="button" class="btn-danger btn add-pro-btn" data-authenticated="{{ auth()->check() }}">+</button>
+                                </div>
+                                <div class="add-pro-form-container add-child-form-container" style="display:none;">
                                     <form action="{{ route('debate.addPro', ':id') }}" method="POST" class="add-pro-form">
                                         @csrf
-                                        <input type="text" name="title" placeholder="Enter pro argument" maxlength="500">
+                                        <input class="child-form-input" type="text" name="title" placeholder="Enter pro argument" maxlength="500">
                                         <p class="char-count">500 characters remaining</p>
-                                        <button type="submit">Submit</button>
+                                        <button class="child-form-submit" type="submit">Submit</button>
                                         <button type="button" class="close-form-btn">Close</button>
                                     </form>
                                 </div>
                             </div>
 
                             <div class="column-box column-box--header--con">
-                                <p class="column-box--con--info">Cons</p>
-                                <button type="button" class="btn-danger btn add-cons-btn" data-authenticated="{{ auth()->check() }}">+</button>
-                                <div class="add-con-form" style="display:none;">
+                                <div class="column-box--header--con--contents">
+                                    <p class="column-box--con--info">Cons</p>
+                                    <button type="button" class="btn-danger btn add-cons-btn" data-authenticated="{{ auth()->check() }}">+</button>
+                                </div>
+                                <div class="add-con-form-container add-child-form-container" style="display:none;">
                                     <form action="{{ route('debate.addCon', ':id') }}" method="POST" class="add-con-form">
                                         @csrf
-                                        <input type="text" name="title" placeholder="Enter con argument" maxlength="500">
+                                        <input class="child-form-input" type="text" name="title" placeholder="Enter con argument" maxlength="500">
                                         <p class="char-count">500 characters remaining</p>
-                                        <button type="submit">Submit</button>
+                                        <button class="child-form-submit" type="submit">Submit</button>
                                         <button type="button" class="close-form-btn">Close</button>
                                     </form>
                                 </div>
