@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Debate;
 use App\Models\User;
 use App\Models\Tag;
+use App\Models\DebateComment;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -80,38 +81,37 @@ class DebateController extends Controller
         return redirect()->route('home');
     }
     
-    public function single($slug)
+    public function single(Request $request, $slug)
     {
         // Find the debate by slug
         $debate = Debate::where('slug', $slug)->firstOrFail();
     
-        // Get the selected claim's title
-        $selectedClaimTitle = $debate->title;
-    
-        // Find the pros and cons for this debate
+        // Retrieve pro and con arguments for the debate
         $pros = Debate::where('parent_id', $debate->id)->where('side', 'pro')->get();
         $cons = Debate::where('parent_id', $debate->id)->where('side', 'con')->get();
     
-        // Pass the debate, pros, cons, and selected claim title data to the view
-        return view('debate.single', compact('debate', 'pros', 'cons', 'selectedClaimTitle'));
+        $activeDebateId = $request->query('active');
+        
+        // Retrieve comments for the debate
+        $comments = $this->getAllComments($debate);
+
+        // Find ancestors of the debate
+        $ancestors = [];
+        $claim = $debate;
+    
+        // Traverse up the parent chain until reaching the root or parent_id is null
+        while ($claim->parent_id !== null) {
+            $claim = Debate::findOrFail($claim->parent_id);
+            $ancestors[] = $claim;
+        }
+    
+        // Reverse the ancestors array to display from root to selected claim
+        $ancestors = array_reverse($ancestors);
+    
+        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'ancestors'));
     }
-    
-    
     
 
-    public function getChildArguments($slug)
-    {
-        // Find the debate by slug
-        $debate = Debate::where('slug', $slug)->firstOrFail();
-        
-        // Find child debates for the selected debate's ID
-        $pros = Debate::where('parent_id', $debate->id)->where('side', 'pro')->get();
-        $cons = Debate::where('parent_id', $debate->id)->where('side', 'con')->get();
-        
-        // Return child debates as JSON response
-        return response()->json(['pros' => $pros, 'cons' => $cons]);
-    }
-    
     
     public function getDebatesByTag(Request $request, $tagName)
     {
@@ -260,6 +260,34 @@ class DebateController extends Controller
         return $debate->id;
     }
     
+    public function addComment(Request $request, $debateId)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:500',
+        ]);
 
+        $comment = new DebateComment();
+        $comment->user_id = Auth::id();
+        $comment->debate_id = $debateId;
+        $comment->comment = $request->comment;
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Comment added successfully.');
+    }
+
+    // Method to retrieve all comments for a debate
+    public function getAllComments($debate)
+    {
+        // Retrieve comments for the debate and its ancestors
+        $debateIds = Debate::where('id', $debate->id)
+                            ->orWhere('parent_id', $debate->id)
+                            ->pluck('id');
+
+        $comments = DebateComment::whereIn('debate_id', $debateIds)
+                                    ->with('user')
+                                    ->get();
+        
+        return $comments->toArray();
+    }
 
 }

@@ -23,7 +23,7 @@
                         @foreach($debates as $debate)
                             @if($loop->index < 4)
                                 <div class="debate-card">
-                                    <a href="{{ route('debate.single', ['slug' => $debate->slug]) }}">
+                                    <a href="{{ route('debate.single', ['slug' => $debate->slug, 'active' => $debate->id]) }}">
                                         <div class="card-img-div">
                                             <img src="{{$debate->image}}" alt="{{ $debate->title }}">
                                         </div>
@@ -149,7 +149,7 @@
                             @foreach($debates as $debate)
                                 @if($loop->index >= 4)
                                     <div class="debate-card">
-                                        <a href="{{ route('debate.single', ['slug' => $debate->slug]) }}">
+                                        <a href="{{ route('debate.single', ['slug' => $debate->slug, 'active' => $debate->id]) }}">
                                             <div class="card-img-div">
                                                 <img src="{{$debate->image}}" alt="{{ $debate->title }}">
                                             </div>

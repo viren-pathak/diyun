@@ -39,8 +39,8 @@ Route::post('reset-password', [UserController::class, 'resetPassword'])->name('r
 
 
 Route::post('/debate/create-debate', [DebateController::class, 'createDebate'])->name('debate.createDebate');
-Route::get('/debate/{slug}', [DebateController::class, 'single'])->name('debate.single');
-Route::get('/debate/{id}/children', [DebateController::class, 'getChildArguments'])->name('debate.children');
+Route::get('/{slug}', [DebateController::class, 'single'])->name('debate.single');
+Route::get('/get-child-arguments/{slug}', [DebateController::class, 'getChildArguments'])->name('debate.getChildArguments');
 
 
 Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
@@ -48,8 +48,9 @@ Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
 Route::get('/tags/{tag}', [DebateController::class, 'getDebatesByTag'])->name('tags.single');
 Route::get('tags', [DebateController::class, 'getAllTags'])->name('tags');
 
-Route::post('/debate/{id}/add-pro', [DebateController::class, 'addPro'])->name('debate.addPro');
-Route::post('/debate/{id}/add-con', [DebateController::class, 'addCon'])->name('debate.addCon');
+Route::post('/add-pro/{id}', [DebateController::class, 'addPro'])->name('debate.addPro');
+Route::post('/add-con/{id}', [DebateController::class, 'addCon'])->name('debate.addCon');
+Route::post('/comment/{id}', [DebateController::class, 'addComment'])->name('debate.comment');
 
 /***** ROUTES FOR static PAGES *****/
 
