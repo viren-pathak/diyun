@@ -41,6 +41,8 @@ Route::post('reset-password', [UserController::class, 'resetPassword'])->name('r
 Route::post('/debate/create-debate', [DebateController::class, 'createDebate'])->name('debate.createDebate');
 Route::get('/{slug}', [DebateController::class, 'single'])->name('debate.single');
 Route::get('/get-child-arguments/{slug}', [DebateController::class, 'getChildArguments'])->name('debate.getChildArguments');
+Route::get('/{slug}/settings', [DebateController::class, 'settings'])->name('settings');
+Route::post('/debate/{slug}/edit', [DebateController::class, 'editRootDebate'])->name('editRootDebate');
 
 
 Route::get('/', [DebateController::class, 'getHomeData'])->name('home');

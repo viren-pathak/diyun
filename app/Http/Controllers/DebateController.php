@@ -9,6 +9,7 @@ use App\Models\DebateComment;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DebateController extends Controller
 {
@@ -86,6 +87,9 @@ class DebateController extends Controller
         // Find the debate by slug
         $debate = Debate::where('slug', $slug)->firstOrFail();
     
+        // Find the root debate
+        $rootDebate = $this->findRootDebate($debate);
+    
         // Retrieve pro and con arguments for the debate
         $pros = Debate::where('parent_id', $debate->id)->where('side', 'pro')->get();
         $cons = Debate::where('parent_id', $debate->id)->where('side', 'con')->get();
@@ -105,10 +109,12 @@ class DebateController extends Controller
             $ancestors[] = $claim;
         }
     
+        // Set a variable to indicate whether to hide the buttons
+        $hideButtons = false;
         // Reverse the ancestors array to display from root to selected claim
         $ancestors = array_reverse($ancestors);
     
-        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'ancestors'));
+        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'ancestors', 'rootDebate', 'hideButtons'));
     }
     
 
@@ -288,6 +294,102 @@ class DebateController extends Controller
                                     ->get();
         
         return $comments->toArray();
+    }
+
+        // Helper method to find the root debate
+    private function findRootDebate($debate)
+    {
+        // Traverse up the parent chain until reaching the root or parent_id is null
+        while ($debate->parent_id !== null) {
+            $debate = Debate::findOrFail($debate->parent_id);
+        }
+    
+        return $debate;
+    }
+    
+    
+    public function editRootDebate(Request $request, $slug)
+    {
+        // Find the root debate
+        $rootDebate = Debate::where('slug', $slug)->firstOrFail();
+    
+        // Check if the form is submitted
+        if ($request->isMethod('post')) {
+            // Validate the form data
+            $request->validate([
+                'image' => 'image|max:2048', // Update image if provided
+                'title' => 'required|string|max:255', // Title is required
+                'backgroundinfo' => 'nullable|string|max:500', // Background info is optional
+                'tags' => 'required|string', // Tags are required
+            ]);
+    
+            // Handle image upload if provided
+            if ($request->hasFile('image')) {
+                // Delete the old image from storage
+                Storage::disk('public')->delete($rootDebate->image);
+    
+                // Store the new image
+                $imagePath = $request->file('image')->store('debate-images', 'public');
+                // Update the image path
+                $rootDebate->image = $imagePath;
+            }
+    
+            // Update other fields
+            $rootDebate->title = $request->title;
+            $rootDebate->backgroundinfo = $request->backgroundinfo;
+            // Convert tags string to an array and lowercase each tag
+            $tags = array_map('strtolower', explode(',', $request->tags));
+            // Convert tags array to JSON
+            $tagsJson = json_encode(array_values(array_unique($tags)));
+            $rootDebate->tags = $tagsJson;
+            // Save the changes
+            $rootDebate->save();
+    
+            return redirect()->route('settings', ['slug' => $rootDebate->slug])->with('success', 'Debate information updated successfully');
+        }
+    
+        return view('debate.edit', compact('rootDebate'));
+    }
+
+
+    public function settings(Request $request, $slug)
+    {
+        // Find the root debate
+        $rootDebate = Debate::where('slug', $slug)->firstOrFail();
+
+        // Retrieve participants
+        $participants = $this->getParticipants($rootDebate);
+
+        // Set a variable to indicate whether to hide the buttons
+        $hideButtons = true;
+
+        return view('debate.settings', compact('rootDebate', 'participants', 'hideButtons'));
+    }
+    
+    // New method to retrieve all participants in the debate hierarchy
+    private function getParticipants($rootDebate)
+    {
+        // Retrieve all debates in the hierarchy
+        $debateIds = Debate::where('id', $rootDebate->id)
+            ->orWhere('root_id', $rootDebate->id)
+            ->pluck('id')
+            ->toArray();
+    
+        // Retrieve all users who created the debates
+        $debateUsers = User::whereIn('id', Debate::whereIn('id', $debateIds)->pluck('user_id'))->get();
+    
+        // Retrieve all users who commented on the debates
+        $commentUsers = User::whereIn('id', DebateComment::whereIn('debate_id', $debateIds)->pluck('user_id'))->get();
+    
+        // Merge and return unique users
+        $participants = $debateUsers->merge($commentUsers)->unique('id');
+    
+        // Prepend the storage path to the profile picture URL
+        foreach ($participants as $participant) {
+            $participant->profile_picture_url = asset('storage/' . $participant->profile_picture);
+        }
+    
+        return $participants;
     }
 
 }

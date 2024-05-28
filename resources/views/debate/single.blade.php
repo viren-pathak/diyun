@@ -1,4 +1,4 @@
-@extends('page.master')
+@extends('debate.master')
 
 @section('content')
 
