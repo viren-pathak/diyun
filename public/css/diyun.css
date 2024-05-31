@@ -674,10 +674,6 @@ p.topbar-debate-title {
     background-color: #fff;
 }
 
-.selected-claim .claim-card{
-    border:2px solid #1d67ac;
-}
-
 
 .columns-container{
     margin-top:20px;
@@ -766,11 +762,15 @@ button.btn-danger.btn.add-cons-btn {
     margin-right:5px;
 }
 
-.column-box--claims-con .claim-card:hover{
+.root-debate-claim .claim-card {
+  border: 2px solid #1d67ac;
+}
+
+.con-child-claim .claim-card:hover{
     border:1px solid #dc3545;
 }
 
-.column-box--claims-pro .claim-card:hover{
+.pro-child-claim .claim-card:hover{
     border:1px solid #198754;
 }
 
@@ -861,7 +861,48 @@ button.btn-danger.btn.add-cons-btn {
 }
 
 
+/***** VOTE PROGRESS BAR *****/
 
+.root-debate-claim .progress-bar {
+  background-color:#1d67ac;
+}
+
+.con-child-claim .progress-bar {
+  background-color:#dc3545;
+}
+
+.pro-child-claim .progress-bar {
+  background-color:#198754;
+}
+
+
+.progress-bar-container {
+  width: 100px !important;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 5px !important;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  color: white;
+  text-align: center;
+  line-height: 20px;
+  transition: width 0.3s;
+}
+
+.root-debate-claim .progress-bar-container {
+  border:1px solid #1d67ac;
+}
+
+.con-child-claim .progress-bar-container {
+  border:1px solid #dc3545;
+}
+
+.pro-child-claim .progress-bar-container {
+  border:1px solid #198754;
+}
 
   /*----------------------------------------------
   --------------- DEBATE SETTING PAGE ----------------

@@ -45,5 +45,14 @@ class Debate extends Model
         return $this->hasMany(DebateComment::class);
     }
 
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
 
+    public function userVoted()
+    {
+        // Check if the authenticated user has voted for this debate
+        return $this->votes()->where('user_id', auth()->id())->exists();
+    }
 }

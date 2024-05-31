@@ -54,6 +54,10 @@ Route::post('/add-pro/{id}', [DebateController::class, 'addPro'])->name('debate.
 Route::post('/add-con/{id}', [DebateController::class, 'addCon'])->name('debate.addCon');
 Route::post('/comment/{id}', [DebateController::class, 'addComment'])->name('debate.comment');
 
+Route::post('/debate/{debate}/vote', [DebateController::class, 'vote'])->name('debate.vote');
+Route::delete('debate/{debateId}/vote', [DebateController::class, 'deleteVote'])->name('debate.deleteVote');
+
+
 /***** ROUTES FOR static PAGES *****/
 
 Route::get('/about', [Basecontroller::class, 'about'])->name('about.page');

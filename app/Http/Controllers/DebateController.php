@@ -6,6 +6,7 @@ use App\Models\Debate;
 use App\Models\User;
 use App\Models\Tag;
 use App\Models\DebateComment;
+use App\Models\Vote;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -114,8 +115,57 @@ class DebateController extends Controller
         // Reverse the ancestors array to display from root to selected claim
         $ancestors = array_reverse($ancestors);
     
-        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'ancestors', 'rootDebate', 'hideButtons'));
+        // Function to get votes count
+        $getVotesCount = function ($debateId) {
+            $votesCount = [];
+            for ($i = 0; $i <= 4; $i++) {
+                $votesCount[$i] = Vote::where('debate_id', $debateId)->where('rating', $i)->count();
+            }
+            return $votesCount;
+        };
+    
+        // Get vote counts for the current debate
+        $votesCount = $getVotesCount($debate->id);
+    
+        // Get vote counts for ancestors, pros, and cons
+        $ancestorsVotesCount = [];
+        foreach ($ancestors as $ancestor) {
+            $ancestorsVotesCount[$ancestor->id] = $getVotesCount($ancestor->id);
+        }
+    
+        $prosVotesCount = [];
+        foreach ($pros as $pro) {
+            $prosVotesCount[$pro->id] = $getVotesCount($pro->id);
+        }
+    
+        $consVotesCount = [];
+        foreach ($cons as $con) {
+            $consVotesCount[$con->id] = $getVotesCount($con->id);
+        }
+    
+
+        // Get average votes for the current debate
+        $averageVotes['debate'] = $this->getAverageVotes($debate->id);
+
+        // Calculate average votes for pros
+        foreach ($pros as $pro) {
+            $averageVotes['pros'][$pro->id] = $this->getAverageVotes($pro->id);
+        }
+
+        // Calculate average votes for cons
+        foreach ($cons as $con) {
+            $averageVotes['cons'][$con->id] = $this->getAverageVotes($con->id);
+        }
+
+        // Calculate average votes for ancestors
+        foreach ($ancestors as $ancestor) {
+            $averageVotes['ancestors'][$ancestor->id] = $this->getAverageVotes($ancestor->id);
+        }
+
+        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes'));
     }
+    
+    
     
 
     
@@ -391,5 +441,64 @@ class DebateController extends Controller
     
         return $participants;
     }
+
+    public function vote(Request $request, $debateId)
+    {
+        $debate = Debate::findOrFail($debateId);
+
+        if (!$debate->voting_allowed) {
+            return redirect()->back()->with('error', 'Voting is not allowed for this debate.');
+        }
+
+        $vote = Vote::updateOrCreate(
+            [
+                'debate_id' => $debateId,
+                'user_id' => auth()->id()
+            ],
+            [
+                'rating' => $request->input('rating')
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Your vote has been submitted.');
+    }
+
+    // Add the deleteVote method to your DebateController
+    public function deleteVote(Request $request, $debateId)
+    {
+        // Find the vote to delete
+        $vote = Vote::where('debate_id', $debateId)
+                    ->where('user_id', auth()->id())
+                    ->first();
+
+        if (!$vote) {
+            return redirect()->back()->with('error', 'You have not voted for this debate.');
+        }
+
+        // Delete the vote
+        $vote->delete();
+
+        return redirect()->back()->with('success', 'Your vote has been deleted.');
+    }
+
+    // Add the getAverageVotes method to your DebateController
+    public function getAverageVotes($debateId)
+    {
+        // Get all votes for the debate
+        $votes = Vote::where('debate_id', $debateId)->get();
+
+        if ($votes->isEmpty()) {
+            return 0; // Return 0 if there are no votes
+        }
+
+        // Calculate the sum of votes multiplied by 25
+        $sum = $votes->sum('rating') * 25;
+
+        // Calculate the average by dividing the sum by the number of votes
+        $average = $sum / $votes->count();
+
+        return $average;
+    }
+
 
 }
