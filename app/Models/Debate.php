@@ -27,7 +27,8 @@ class Debate extends Model
         'isDebatePublic',
         'isSingleThesis',
         'voting_allowed',
-        'total_votes'
+        'total_votes',
+        'total_views'
     ];
 
     public function user()

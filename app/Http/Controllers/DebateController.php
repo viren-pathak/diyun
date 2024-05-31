@@ -91,6 +91,12 @@ class DebateController extends Controller
         // Find the root debate
         $rootDebate = $this->findRootDebate($debate);
     
+         // Check if the request came from the homepage
+        if ($request->query('from') === 'homepage') {
+            // Increment total_views for the root debate
+            $rootDebate->increment('total_views');
+        }
+
         // Retrieve pro and con arguments for the debate
         $pros = Debate::where('parent_id', $debate->id)->where('side', 'pro')->get();
         $cons = Debate::where('parent_id', $debate->id)->where('side', 'con')->get();
@@ -218,6 +224,41 @@ class DebateController extends Controller
         return $topContributors;
     }
 
+    public function getDebateStatistics($debate)
+    {
+        // Get all debate IDs in the hierarchy
+        $debateIds = Debate::where('root_id', $debate->id)->orWhere('id', $debate->id)->pluck('id');
+
+        // Total claims: all debates in the hierarchy
+        $totalClaims = Debate::whereIn('id', $debateIds)->count();
+
+        // Total votes: all votes in the hierarchy
+        $totalVotes = Vote::whereIn('debate_id', $debateIds)->count();
+
+        // Total participants: unique users who created debates, commented, or voted in the hierarchy
+        $userIds = [];
+        $userIds = array_merge($userIds, Debate::whereIn('id', $debateIds)->pluck('user_id')->toArray());
+        $userIds = array_merge($userIds, DebateComment::whereIn('debate_id', $debateIds)->pluck('user_id')->toArray());
+        $userIds = array_merge($userIds, Vote::whereIn('debate_id', $debateIds)->pluck('user_id')->toArray());
+        $totalParticipants = count(array_unique($userIds));
+
+        // Total views: views of the root debate only
+        $totalViews = $debate->total_views;
+
+        // Total contributions: sum of votes, comments, and claims
+        $totalComments = DebateComment::whereIn('debate_id', $debateIds)->count();
+        $totalContributions = $totalVotes + $totalComments + $totalClaims;
+
+        return [
+            'total_claims' => $totalClaims,
+            'total_votes' => $totalVotes,
+            'total_participants' => $totalParticipants,
+            'total_views' => $totalViews,
+            'total_contributions' => $totalContributions,
+        ];
+    }
+
+
     public function getHomeData(Request $request)
     {
         $latestTags = Tag::latest()->take(10)->get();
@@ -229,13 +270,24 @@ class DebateController extends Controller
             return $debate;
         });
     
+        // Calculate statistics for each debate
+        $debateStats = $debates->map(function ($debate) {
+            $stats = $this->getDebateStatistics($debate);
+            $debate->total_claims = $stats['total_claims'];
+            $debate->total_votes = $stats['total_votes'];
+            $debate->total_participants = $stats['total_participants'];
+            $debate->total_views = $stats['total_views'];
+            $debate->total_contributions = $stats['total_contributions'];
+            return $debate;
+        });
+
         // Get sum data
         $sumData = $this->getSumData();
 
-        // Get sum data
+        // Get top contributors
         $topContributors = $this->getTopContributors();
-        
-        return view('home', compact('latestTags', 'debates', 'sumData', 'topContributors'));
+
+        return view('home', compact('latestTags', 'debateStats', 'sumData', 'topContributors'));
     }
     
     
@@ -460,6 +512,8 @@ class DebateController extends Controller
             ]
         );
 
+        $debate->increment('total_votes');
+
         return redirect()->back()->with('success', 'Your vote has been submitted.');
     }
 
@@ -477,6 +531,11 @@ class DebateController extends Controller
 
         // Delete the vote
         $vote->delete();
+
+         // Decrement total_votes
+        $debate = Debate::findOrFail($debateId);
+        $debate->decrement('total_votes');
+        
 
         return redirect()->back()->with('success', 'Your vote has been deleted.');
     }

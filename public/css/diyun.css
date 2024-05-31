@@ -456,16 +456,30 @@ hr {
   margin-left: auto !important;
   margin-right: auto !important;
   padding: 15px 0 !important;
-  width: calc(100% - 20px);
+  width: calc(100% - 35px);
+}
+
+.debate-card__stat {
+  display:flex;
+  margin-left: 30px;
+  column-gap: 2px;
 }
 
 .debate-card .color-text-icon p {
   margin-left: 2% !important;
+  color:#818b98 !important;
 }
 
 .debate-card .color-text-icon svg {
   margin-left: 3px;
   margin-right: 1%;
+  stroke:#818b98;
+  fill:#818b98 ;
+}
+
+.debate-card .debate-card-stats__participants svg,
+.debate-card .debate-card-stats__claims svg {
+    fill:none !important;
 }
 
 ul.card-grid {

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('isSingleThesis')->nullable();
             $table->boolean('voting_allowed')->default(false);
             $table->integer('total_votes')->default(0);
+            $table->integer('total_views')->default(0);
             
         });
     }
