@@ -92,7 +92,7 @@ class DebateController extends Controller
         $rootDebate = $this->findRootDebate($debate);
     
          // Check if the request came from the homepage
-        if ($request->query('from') === 'homepage') {
+        if ($request->query('from') === 'debate-card') {
             // Increment total_views for the root debate
             $rootDebate->increment('total_views');
         }
@@ -193,8 +193,19 @@ class DebateController extends Controller
                 return $debate;
             });
         }
+
+        // Calculate statistics for each debate
+        $debateStats = $debates->map(function ($debate) {
+            $stats = $this->getDebateStatistics($debate);
+            $debate->total_claims = $stats['total_claims'];
+            $debate->total_votes = $stats['total_votes'];
+            $debate->total_participants = $stats['total_participants'];
+            $debate->total_views = $stats['total_views'];
+            $debate->total_contributions = $stats['total_contributions'];
+            return $debate;
+        });
     
-        return view('tags.single', compact('debates', 'tag'));
+        return view('tags.single', compact('debates', 'tag', 'debateStats'));
     }
     
     
