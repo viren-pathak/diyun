@@ -20,42 +20,42 @@ use App\Http\Controllers\BaseController;
 //     return view('home');
 // })->name('home');
 
-Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-Route::post('signUp', [UserController::class, 'signUp'])->name('signUp');
-Route::post('login', [UserController::class, 'login'])->name('login');
-Route::get('logout', [UserController::class, 'logout'])->name('logout');
+Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+Route::post('/signUp', [UserController::class, 'signUp'])->name('signUp');
+Route::post('/login', [UserController::class, 'login'])->name('login');
+Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 
-Route::get('login/google', [UserController::class, 'redirectToGoogle'])->name('login.google');
-Route::get('login/google/callback', [UserController::class, 'handleGoogleCallback']);
+Route::get('/login/google', [UserController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/login/google/callback', [UserController::class, 'handleGoogleCallback']);
 
 
-Route::get('complete-registration', [UserController::class, 'showCompleteRegistrationForm'])->name('show-complete-registration');
-Route::post('complete-google-registration', [UserController::class, 'completeGoogleRegistration'])->name('complete-google-registration');
+Route::get('/complete-registration', [UserController::class, 'showCompleteRegistrationForm'])->name('show-complete-registration');
+Route::post('/complete-google-registration', [UserController::class, 'completeGoogleRegistration'])->name('complete-google-registration');
 
 
-Route::get('reset-password', [UserController::class, 'showResetPasswordForm'])->name('show-reset-password-form');
-Route::post('reset-password', [UserController::class, 'resetPassword'])->name('reset-password');
+Route::get('/reset-password', [UserController::class, 'showResetPasswordForm'])->name('show-reset-password-form');
+Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('reset-password');
 
 
 Route::post('/debate/create-debate', [DebateController::class, 'createDebate'])->name('debate.createDebate');
-Route::get('/{slug}', [DebateController::class, 'single'])->name('debate.single');
+Route::get('/debate/{slug}', [DebateController::class, 'single'])->name('debate.single');
 Route::get('/get-child-arguments/{slug}', [DebateController::class, 'getChildArguments'])->name('debate.getChildArguments');
-Route::get('/{slug}/settings', [DebateController::class, 'settings'])->name('settings');
+Route::get('/debate/{slug}/settings', [DebateController::class, 'settings'])->name('settings');
 Route::post('/debate/{slug}/edit', [DebateController::class, 'editRootDebate'])->name('editRootDebate');
 
 
 Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
 
 Route::get('/tags/{tag}', [DebateController::class, 'getDebatesByTag'])->name('tags.single');
-Route::get('tags', [DebateController::class, 'getAllTags'])->name('tags');
+Route::get('/tags', [DebateController::class, 'getAllTags'])->name('tags');
 
 Route::post('/add-pro/{id}', [DebateController::class, 'addPro'])->name('debate.addPro');
 Route::post('/add-con/{id}', [DebateController::class, 'addCon'])->name('debate.addCon');
 Route::post('/comment/{id}', [DebateController::class, 'addComment'])->name('debate.comment');
 
 Route::post('/debate/{debate}/vote', [DebateController::class, 'vote'])->name('debate.vote');
-Route::delete('debate/{debateId}/vote', [DebateController::class, 'deleteVote'])->name('debate.deleteVote');
+Route::delete('/debate/{debateId}/vote', [DebateController::class, 'deleteVote'])->name('debate.deleteVote');
 
 
 /***** ROUTES FOR static PAGES *****/

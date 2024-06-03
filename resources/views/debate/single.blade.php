@@ -520,7 +520,7 @@
                 if (!event.target.closest('.claim-header')) {
                     const claimId = card.dataset.debateId;
                     const claimSlug = card.dataset.debateSlug;
-                    const newURL = `${window.location.origin}/${claimSlug}?active=${claimId}`;
+                    const newURL = `${window.location.origin}/debate/${claimSlug}?active=${claimId}`;
                     window.location.href = newURL;
                 }
             });
