@@ -106,7 +106,8 @@
                         <div class="sidebar-menu-divider"></div>
                     </li>
 
-                    <li class="sidebar-menu-item menu-item-without-svg">
+                    @auth
+                    <li class="sidebar-menu-item menu-item-without-svg sidebar-menu-item-myClaims">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                             </span>
@@ -114,7 +115,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item menu-item-without-svg">
+                    <li class="sidebar-menu-item menu-item-without-svg sidebar-menu-item-myContri">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                             </span>
@@ -141,6 +142,7 @@
                     <li class="menu-divider">
                         <div class="sidebar-menu-divider"></div>
                     </li>
+                    @endauth
 
                     <li class="sidebar-menu-item">
                         <a class="menu-link" href="#">
@@ -157,5 +159,47 @@
             </div>
         </div>
 
+        {{-- #### sidebar menu content #### --}}
+        <div class="single-sidebar-menu__items">
+
+        @auth
+            <div class="single-sidebar-menu__item-myClaims">
+                @include('sidebar.myClaims')
+            </div>
+
+            <div class="single-sidebar-menu__item-myContri">
+                @include('sidebar.myContributions')
+            </div>
+            
+            <div class="single-sidebar-menu__item-mySugClaims">
+            </div>
+
+            <div class="single-sidebar-menu__item-mySugCom">
+            </div>
+        @endauth
+        </div>
     </aside>    
 </div>
+
+<script>
+    $(document).ready(function() {
+
+        // MY CLAIMS DIV OPEN CLOSE
+        $('.sidebar-menu-item-myClaims').click(function() {
+            $('.single-sidebar-menu__item-myClaims').toggleClass('active');
+        });
+
+        $('.single-sidebar-menu__item-back').click(function() {
+            $('.single-sidebar-menu__item-myClaims').removeClass('active');
+            $('.single-sidebar-menu__item-myContri').removeClass('active');
+        });
+
+
+        // MY CONTRIBUTIONS DIV OPEN CLOSE
+
+        $('.sidebar-menu-item-myContri').click(function() {
+            $('.single-sidebar-menu__item-myContri').toggleClass('active');
+        });
+
+
+    });</script>

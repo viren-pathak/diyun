@@ -65,3 +65,9 @@ Route::get('/privacy', [Basecontroller::class, 'Privacy_Policy'])->name('Privacy
 Route::get('/contact', [Basecontroller::class, 'contact'])->name('contact.page');
 Route::get('/help', [Basecontroller::class, 'help'])->name('help.page');
 Route::get('/search', [Basecontroller::class, 'search'])->name('search.page');
+
+
+/**** USER RELATED ROUTES IN SINGLE DEBATE PAGE *****/
+
+Route::get('/debate/{slug}/my-claims', [DebateController::class, 'getMyClaims'])->name('debate.my_claims');
+Route::get('/debate/{slug}/contributions', [DebateController::class, 'getMyContributions'])->name('debate.contributions');

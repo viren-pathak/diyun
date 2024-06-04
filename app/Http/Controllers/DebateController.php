@@ -168,7 +168,13 @@ class DebateController extends Controller
             $averageVotes['ancestors'][$ancestor->id] = $this->getAverageVotes($ancestor->id);
         }
 
-        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes'));
+         // Get the user's claims in the current debate hierarchy
+        $myClaims = $this->getMyClaims($request, $slug);
+
+        // Get the user's contributions (claims, comments, and votes) in the current debate hierarchy
+        $myContributions = $this->getMyContributions($slug);
+
+        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions'));
     }
     
     
@@ -570,5 +576,83 @@ class DebateController extends Controller
         return $average;
     }
 
+    public function getMyClaims(Request $request, $slug)
+    {
+        // Find the root debate by slug
+        $debate = Debate::where('slug', $slug)->firstOrFail();
+    
+        // Get the root debate ID
+        $rootId = $this->findRootId($debate->id);
+    
+        // Get all debates in the hierarchy
+        $debateIds = Debate::where('root_id', $rootId)->orWhere('id', $rootId)->pluck('id');
+    
+        // Get all claims created by the current user in the hierarchy
+        $myClaims = Debate::whereIn('id', $debateIds)
+                          ->where('user_id', Auth::id())
+                          ->get();
+    
+        return $myClaims;
+    }
+
+    private function getMyContributions($slug)
+    {
+        // Find the root debate by slug
+        $debate = Debate::where('slug', $slug)->firstOrFail();
+    
+        // Get the root debate ID
+        $rootId = $this->findRootId($debate->id);
+    
+        // Get all debates in the hierarchy
+        $debateIds = Debate::where('root_id', $rootId)->orWhere('id', $rootId)->pluck('id');
+    
+        // Get all claims created by the current user in the hierarchy
+        $myClaims = Debate::whereIn('id', $debateIds)
+                          ->where('user_id', Auth::id())
+                          ->get();
+    
+        // Get all comments created by the current user in the hierarchy
+        $myComments = DebateComment::whereIn('debate_id', $debateIds)
+                                   ->where('user_id', Auth::id())
+                                   ->get();
+    
+        // Get all votes created by the current user in the hierarchy
+        $myVotes = Vote::whereIn('debate_id', $debateIds)
+                       ->where('user_id', Auth::id())
+                       ->get();
+    
+        // Combine all contributions into a single collection
+        $contributions = collect();
+    
+        foreach ($myClaims as $claim) {
+            $contributions->push([
+                'type' => 'claim',
+                'data' => $claim,
+                'created_at' => $claim->created_at,
+            ]);
+        }
+    
+        foreach ($myComments as $comment) {
+            $contributions->push([
+                'type' => 'comment',
+                'data' => $comment,
+                'created_at' => $comment->created_at,
+            ]);
+        }
+    
+        foreach ($myVotes as $vote) {
+            $contributions->push([
+                'type' => 'vote',
+                'data' => $vote,
+                'created_at' => $vote->created_at,
+            ]);
+        }
+    
+        // Sort the contributions by created_at in descending order
+        $sortedContributions = $contributions->sortByDesc('created_at');
+    
+        return $sortedContributions;
+    }
+    
 
 }
