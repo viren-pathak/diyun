@@ -66,11 +66,15 @@
                                         </ul>
                                     </div>
                                     <div class="new-comment-editor">
+                                        @if (auth()->check())
                                         <form action="{{ route('debate.comment', $ancestor->id) }}" method="POST" class="comment-form">
                                             @csrf
                                             <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
                                             <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>
                                         </form>
+                                        @else
+                                            <button class="comment-login-btn" onclick="openLoginForm()">Please log in to write comments</button>
+                                        @endif
                                     </div>
                                 </div>
                                 <div id="votesContainerAncestor{{ $ancestor->id }}" class="votes-drafts-container" style="display:none;">
@@ -157,11 +161,15 @@
                                     </ul>
                                 </div>
                                 <div class="new-comment-editor">
+                                    @if (auth()->check())
                                     <form action="{{ route('debate.comment', $debate->id) }}" method="POST" class="comment-form">
                                         @csrf
                                         <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
                                         <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>
                                     </form>
+                                    @else
+                                        <button class="comment-login-btn" onclick="openLoginForm()">Please log in to write comments</button>
+                                    @endif
                                 </div>
                             </div>
                             <div id="votesContainer{{ $debate->id }}" class="votes-drafts-container" style="display:none;">
@@ -284,11 +292,15 @@
                                                             </ul>
                                                         </div>
                                                         <div class="new-comment-editor">
+                                                            @if (auth()->check())
                                                             <form action="{{ route('debate.comment', $pro->id) }}" method="POST" class="comment-form">
                                                                 @csrf
                                                                 <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
                                                                 <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>
                                                             </form>
+                                                            @else
+                                                                <button class="comment-login-btn" onclick="openLoginForm()">Please log in to write comments</button>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     <div id="votesContainerPro{{ $pro->id }}" class="votes-drafts-container" style="display:none;">
@@ -378,11 +390,15 @@
                                                             </ul>
                                                         </div>
                                                         <div class="new-comment-editor">
+                                                            @if (auth()->check())
                                                             <form action="{{ route('debate.comment', $con->id) }}" method="POST" class="comment-form">
                                                                 @csrf
                                                                 <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
                                                                 <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>
                                                             </form>
+                                                            @else
+                                                                <button class="comment-login-btn" onclick="openLoginForm()">Please log in to write comments</button>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     <div id="votesContainerCon{{ $con->id }}" class="votes-drafts-container" style="display:none;">
@@ -459,6 +475,19 @@
             }
         });
 
+            // Updated function for handling comments button clicks
+            document.querySelectorAll('.comment-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (!authCheck()) {
+                        openLoginForm();
+                    }
+                });
+            });
+
+            // Function to check if user is authenticated
+            function authCheck() {
+                return button.getAttribute('data-authenticated') === '1';
+            }
 
         // Function to handle the selection of a claim
         function selectClaim(claimId, claimSlug) {

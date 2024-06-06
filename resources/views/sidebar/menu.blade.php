@@ -161,22 +161,22 @@
 
         {{-- #### sidebar menu content #### --}}
         <div class="single-sidebar-menu__items">
+            @auth
+                <div class="single-sidebar-menu__item-myClaims">
+                    @isset($myClaims)
+                        @include('sidebar.myClaims')
+                    @endisset
+                </div>
 
-        @auth
-            <div class="single-sidebar-menu__item-myClaims">
-                @include('sidebar.myClaims')
-            </div>
+                <div class="single-sidebar-menu__item-myContri">
+                    @isset($myContributions)
+                        @include('sidebar.myContributions')
+                    @endisset
+                </div>
 
-            <div class="single-sidebar-menu__item-myContri">
-                @include('sidebar.myContributions')
-            </div>
-            
-            <div class="single-sidebar-menu__item-mySugClaims">
-            </div>
-
-            <div class="single-sidebar-menu__item-mySugCom">
-            </div>
-        @endauth
+                <div class="single-sidebar-menu__item-mySugClaims"></div>
+                <div class="single-sidebar-menu__item-mySugCom"></div>
+            @endauth
         </div>
     </aside>    
 </div>
