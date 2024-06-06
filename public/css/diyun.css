@@ -171,6 +171,100 @@
   }
 
 
+/* form pop */
+#multistep-form-container {
+  display: none; 
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#multistep-form-container .close-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+/* css popup */
+input{ width: 100%;
+  margin: 10px;
+  padding: 8px;
+}
+
+
+
+
+
+
+.login-form, .signup-form {
+display: none; /* Hidden by default */
+position: fixed;
+left: 50%;
+top: 50%;
+width: 50%;
+height: 400px;
+transform: translate(-50%, -50%);
+border: 3px solid #f1f1f1;
+border-radius: 10px;
+z-index: 9;
+background-color: white;
+padding: 20px;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.card{
+text-align:center;
+}
+form button{
+background-color: #0069e0;
+color: #fff;
+padding: 8px 20px;
+}
+.close-button {
+background:none;
+color: #0069e0;
+width: 40px;
+height: 40px;
+position: absolute;
+top: 0;
+right: 0;
+margin: 10px;
+border: solid 1px #0069e0;
+}
+.btn-google{
+border: 1px solid #494747;
+padding: 8px 20px;
+border-radius: 10px;
+}
+
+
+/* Styles for the modal */
+.modal {
+  display: none; /* Hide the modal by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal content */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
   /*---------------------------------------------
   ------------------- FOOTER --------------------
   ----------------------------------------------*/

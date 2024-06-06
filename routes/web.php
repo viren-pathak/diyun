@@ -20,8 +20,19 @@ use App\Http\Controllers\BaseController;
 //     return view('home');
 // })->name('home');
 
-Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-Route::post('/signUp', [UserController::class, 'signUp'])->name('signUp');
+Route::get('invalid-token', [UserController::class, 'invalid'])->name('invalid');
+
+Route::group(['middleware' => ['auth']], function() {
+    Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+});
+
+Route::post('/register', [UserController::class, 'register'])->name('register');
+Route::get('/forget-password', [UserController::class, 'user_forget'])->name('user_forget');
+Route::post('/forget-password', [UserController::class, 'user_forget_2'])->name('user_forget_2');
+
+Route::get('/new-password/{token}', [UserController::class, 'user_new_password'])->name('user_new_password');
+Route::post('/update-password/{token}', [UserController::class, 'verifyAccount_2'])->name('update_password');
+
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
