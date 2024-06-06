@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Tag;
 use App\Models\DebateComment;
 use App\Models\Vote;
+use App\Models\DebateRole;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -65,7 +66,7 @@ class DebateController extends Controller
         }
 
         // Store data in the database
-        Debate::create([
+        $debate = Debate::create([
             'user_id' => auth()->id(),
             'title' => $request->title,
             'slug' => $slug,
@@ -75,6 +76,13 @@ class DebateController extends Controller
             'image' => $imagePath,
             'isDebatePublic' => $request->isDebatePublic,
             'isSingleThesis' => $request->isSingleThesis,
+        ]);
+    
+        // Assign the "Owner" role to the user who creates the debate
+        DebateRole::create([
+            'user_id' => auth()->id(),
+            'root_id' => $debate->id,
+            'role' => 'owner',
         ]);
     
         // Clear session data
@@ -506,6 +514,9 @@ class DebateController extends Controller
         // Prepend the storage path to the profile picture URL
         foreach ($participants as $participant) {
             $participant->profile_picture_url = asset('storage/' . $participant->profile_picture);
+    
+            // Attach roles related to the specific debate
+            $participant->roles_for_debate = $participant->roles($rootDebate->id)->get();
         }
     
         return $participants;

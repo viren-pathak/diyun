@@ -85,6 +85,9 @@
                                         </div>
                                     </div>
                                     <div class="participant-debate-role">
+                                        @foreach($participant->roles_for_debate as $role)
+                                            {{ $role->role }}
+                                        @endforeach
                                     </div>
                                 </li>
                             @endforeach

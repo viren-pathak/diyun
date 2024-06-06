@@ -53,4 +53,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed'
     ];
+
+
+
+    public function roles($debateId)
+    {
+        return $this->hasMany(DebateRole::class)->where('root_id', $debateId);
+    }
+
 }
