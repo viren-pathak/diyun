@@ -286,7 +286,7 @@ class DebateController extends Controller
 
     public function getHomeData(Request $request)
     {
-        $latestTags = Tag::latest()->take(10)->get();
+        $latestTags = Tag::latest()->take(5)->get();
         $debates = Debate::whereNull('parent_id')->latest()->get();
     
         // Prepend the base URL to the image path for debates
