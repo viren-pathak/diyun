@@ -181,10 +181,57 @@ class DebateController extends Controller
 
         // Get the user's contributions (claims, comments, and votes) in the current debate hierarchy
         $myContributions = $this->getMyContributions($slug);
+    
+        // Get debate statistics
+        $debateStats = $this->getDebateStatistics($debate);
+    
+        // Get debate data
+        $debatePopupData = $this->getDebatePopupData($debate);
 
-        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions'));
+        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData'));
     }
     
+    
+    
+    public function getDebatePopupData($debate)
+    {
+        // Get tags for the debate from the 'tags' column in the 'debate' table
+        $tags = json_decode($debate->tags);
+        
+        // Get all debate IDs in the hierarchy
+        $debateIds = Debate::where('root_id', $debate->id)->orWhere('id', $debate->id)->pluck('id');
+        
+        // Get participants (unique users) who created debates, commented, or voted in the hierarchy
+        $userIds = [];
+        $userIds = array_merge($userIds, Debate::whereIn('id', $debateIds)->pluck('user_id')->toArray());
+        $userIds = array_merge($userIds, DebateComment::whereIn('debate_id', $debateIds)->pluck('user_id')->toArray());
+        $userIds = array_merge($userIds, Vote::whereIn('debate_id', $debateIds)->pluck('user_id')->toArray());
+        $uniqueUserIds = array_unique($userIds);
+        
+        // Get user data
+        $participants = User::whereIn('id', $uniqueUserIds)->get();
+        
+        // Get user contributions
+        $participantData = [];
+        foreach ($participants as $participant) {
+            $claimsCount = Debate::whereIn('id', $debateIds)->where('user_id', $participant->id)->count();
+            $votesCount = Vote::whereIn('debate_id', $debateIds)->where('user_id', $participant->id)->count();
+            $commentsCount = DebateComment::whereIn('debate_id', $debateIds)->where('user_id', $participant->id)->count();
+            $totalContributions = $claimsCount + $votesCount + $commentsCount;
+        
+            $participantData[] = [
+                'user' => $participant,
+                'claims_count' => $claimsCount,
+                'votes_count' => $votesCount,
+                'total_contributions' => $totalContributions
+            ];
+        }
+        
+        return [
+            'tags' => $tags,
+            'participants' => $participantData,
+        ];
+    }
     
     
 
