@@ -279,23 +279,31 @@ class DebateController extends Controller
     }
     
     
-    public function getSumData()
+    public function getDiyunInNumber()
     {
-        // Get the sum of total_claims, total_votes, and total_contributions
-        $sumData = [
-            'total_claims' => User::sum('total_claims'),
-            'total_votes' => User::sum('total_votes'),
-            'total_contributions' => User::sum('total_contributions'),
-        ];
+        // Get the sum of total_claims from debates table
+        $totalClaims = Debate::count();
     
-        // Get the count of debates with parent_id as null
+        // Get the count of votes from votes table
+        $totalVotes = Vote::count();
+    
+        // Calculate total_contributions as sum of votes, comments, and claims
+        $totalContributions = Vote::count() + DebateComment::count() + Debate::count();
+    
+        // Get the count of debates with parent_id as null from debates table
         $debateCount = Debate::whereNull('parent_id')->count();
     
-        // Add the count of debates to the sum data
-        $sumData['debate_count'] = $debateCount;
+        // Prepare the sumData array
+        $sumData = [
+            'total_claims' => $totalClaims,
+            'total_votes' => $totalVotes,
+            'total_contributions' => $totalContributions,
+            'debate_count' => $debateCount,
+        ];
     
         return $sumData; // Return just the data, not the view
     }
+    
     
     public function getTopContributors()
     {
@@ -399,7 +407,7 @@ class DebateController extends Controller
         });
 
         // Get sum data
-        $sumData = $this->getSumData();
+        $sumData = $this->getDiyunInNumber();
 
         // Get top contributors
         $topContributors = $this->getTopContributors();
