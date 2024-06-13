@@ -330,7 +330,33 @@ class DebateController extends Controller
         ];
     }
 
+    protected function getDebateContributors($debate)
+    {
+        // Get all debate IDs in the hierarchy
+        $debateIds = Debate::where('root_id', $debate->id)->orWhere('id', $debate->id)->pluck('id');
+        
+        // Get participants (unique users) who created debates, commented, or voted in the hierarchy
+        $userIds = [];
+        $userIds = array_merge($userIds, Debate::whereIn('id', $debateIds)->pluck('user_id')->toArray());
+        $userIds = array_merge($userIds, DebateComment::whereIn('debate_id', $debateIds)->pluck('user_id')->toArray());
+        $userIds = array_merge($userIds, Vote::whereIn('debate_id', $debateIds)->pluck('user_id')->toArray());
+        $uniqueUserIds = array_unique($userIds);
+        
+        // Get user data
+        $participants = User::whereIn('id', $uniqueUserIds)->get();
+        
+        // Prepare contributor data
+        $contributors = $participants->map(function ($participant) {
+            return [
+                'username' => $participant->username,
+                'profile_picture' => $participant->profile_picture ? asset( $participant->profile_picture) : asset('uploads/default-avatar.png'),
+            ];
+        });
+    
+        return $contributors;
+    }
 
+    
     public function getHomeData(Request $request)
     {
         $latestTags = Tag::latest()->take(5)->get();
@@ -342,7 +368,7 @@ class DebateController extends Controller
             return $debate;
         });
     
-        // Calculate statistics for each debate
+        // Calculate statistics for each debate and get contributors
         $debateStats = $debates->map(function ($debate) {
             $stats = $this->getDebateStatistics($debate);
             $debate->total_claims = $stats['total_claims'];
@@ -350,6 +376,7 @@ class DebateController extends Controller
             $debate->total_participants = $stats['total_participants'];
             $debate->total_views = $stats['total_views'];
             $debate->total_contributions = $stats['total_contributions'];
+            $debate->contributors = $this->getDebateContributors($debate);
             return $debate;
         });
 
