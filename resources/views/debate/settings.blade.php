@@ -51,6 +51,29 @@
                                     <input type="text" id="tags" name="tags" value="{{ implode(',', json_decode($rootDebate->tags)) }}"><br>
                                 </div>
 
+                                {{-- Voting Allowed Checkbox --}}
+                                <div class="debate-details__voting">
+                                    <label for="voting_allowed">Allow Voting</label><br>
+                                    <input type="checkbox" id="voting_allowed" name="voting_allowed" {{ $rootDebate->voting_allowed ? 'checked' : '' }}>
+                                </div>
+
+
+                                {{-- Debate Actions --}}
+                                <div class="debate-actions-container">
+                                    <h4 class="debate-actions__title">Debate Actions</h4>
+                                    <ul class="debate-actions__item-lists">
+                                        <li class="debate-actions__item debate-action__change-type">
+                                            <button type="button" id="change-debate-type">Change Debate Type</button>
+                                        </li>
+                                        <li class="debate-actions__item debate-action__archive-debate">
+                                            <button type="button" id="archive-debate">Archive Debate</button>
+                                        </li>
+                                        <li class="debate-actions__item debate-action__export-debate">
+                                            <button type="button" id="export-debate">Export Debate Data</button>
+                                        </li>
+                                    </ul>
+                                </div>
+
                                 {{-- Debate Background Submit Button --}}
                                 <div class="debate-details__submit-btn">
                                     <button type="submit">Save</button>
@@ -103,10 +126,29 @@
             window.location.href = '{{ route("debate.single", ["slug" => $rootDebate->slug, "active" => $rootDebate->id]) }}';
         }
 
-        // Add an event listener to the form to prevent default submission behavior
-        document.getElementById('settings-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission behavior
-            closeSettings(); // Call the closeSettings function
+        document.addEventListener('DOMContentLoaded', function() {
+            var isOwner = @json($isOwner);
+
+            if (!isOwner) {
+                // Disable form fields
+                document.querySelectorAll('#settings-form input, #settings-form textarea').forEach(function(element) {
+                    element.readOnly = true;
+                    if (element.type === 'file') {
+                        element.disabled = true;
+                    }
+                });
+
+                // Hide submit button
+                document.querySelector('.debate-details__submit-btn').style.display = 'none';
+
+                // Disable action buttons
+                document.querySelectorAll('.debate-actions-container button').forEach(function(button) {
+                    button.disabled = true;
+                });
+
+                // Disable voting allowed checkbox
+                document.getElementById('voting_allowed').disabled = true;
+            }
         });
     </script>
 @endsection

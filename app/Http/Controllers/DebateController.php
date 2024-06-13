@@ -540,8 +540,15 @@ class DebateController extends Controller
         // Find the root debate
         $rootDebate = Debate::where('slug', $slug)->firstOrFail();
     
+        // Check if the user is authenticated and the owner of the debate
+        $isOwner = auth()->check() && auth()->user()->id === $rootDebate->user_id;
+    
         // Check if the form is submitted
         if ($request->isMethod('post')) {
+            if (!$isOwner) {
+                return redirect()->route('debate.single', ['slug' => $rootDebate->slug])->with('error', 'You do not have permission to edit this debate.');
+            }
+    
             // Validate the form data
             $request->validate([
                 'image' => 'image|max:2048', // Update image if provided
@@ -569,14 +576,37 @@ class DebateController extends Controller
             // Convert tags array to JSON
             $tagsJson = json_encode(array_values(array_unique($tags)));
             $rootDebate->tags = $tagsJson;
+    
+            // Update voting_allowed field based on checkbox state
+            $rootDebate->voting_allowed = $request->has('voting_allowed');
+    
             // Save the changes
             $rootDebate->save();
+    
+            // Update voting_allowed for all child debates recursively
+            $this->updateVotingAllowed($rootDebate, $rootDebate->voting_allowed);
     
             return redirect()->route('settings', ['slug' => $rootDebate->slug])->with('success', 'Debate information updated successfully');
         }
     
-        return view('debate.edit', compact('rootDebate'));
+        return view('debate.edit', compact('rootDebate', 'isOwner'));
     }
+    
+    /**
+     * Recursively update voting_allowed for all child debates
+     */
+    private function updateVotingAllowed($rootDebate, $votingAllowed)
+    {
+        // Update current debate's voting_allowed
+        $rootDebate->voting_allowed = $votingAllowed;
+        $rootDebate->save();
+    
+        // Update voting_allowed for all child debates recursively
+        foreach ($rootDebate->children as $childDebate) {
+            $this->updateVotingAllowed($childDebate, $votingAllowed);
+        }
+    }
+    
 
 
     public function settings(Request $request, $slug)
@@ -590,7 +620,10 @@ class DebateController extends Controller
         // Set a variable to indicate whether to hide the buttons
         $hideButtons = true;
 
-        return view('debate.settings', compact('rootDebate', 'participants', 'hideButtons'));
+        // Check if the user is authenticated and the owner of the debate
+        $isOwner = auth()->check() && auth()->user()->id === $rootDebate->user_id;
+    
+        return view('debate.settings', compact('rootDebate', 'participants', 'hideButtons', 'isOwner'));
     }
     
     // New method to retrieve all participants in the debate hierarchy
