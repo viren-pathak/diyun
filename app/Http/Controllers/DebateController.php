@@ -195,12 +195,21 @@ class DebateController extends Controller
     
     public function getDebatePopupData($debate)
     {
-        // Get tags for the debate from the 'tags' column in the 'debate' table
-        $tags = json_decode($debate->tags);
-        
+        // Check if the current debate is a root debate or a child debate
+        if ($debate->root_id !== null) {
+            // Fetch the root debate
+            $rootDebate = Debate::find($debate->root_id);
+        } else {
+            // Current debate is already a root debate
+            $rootDebate = $debate;
+        }
+    
+        // Get tags for the root debate from the 'tags' column in the 'debate' table
+        $tags = json_decode($rootDebate->tags);
+    
         // Get all debate IDs in the hierarchy
-        $debateIds = Debate::where('root_id', $debate->id)->orWhere('id', $debate->id)->pluck('id');
-        
+        $debateIds = Debate::where('root_id', $rootDebate->id)->orWhere('id', $rootDebate->id)->pluck('id');
+    
         // Get participants (unique users) who created debates, commented, or voted in the hierarchy
         $userIds = [];
         $userIds = array_merge($userIds, Debate::whereIn('id', $debateIds)->pluck('user_id')->toArray());
@@ -298,9 +307,18 @@ class DebateController extends Controller
 
     public function getDebateStatistics($debate)
     {
+        // Check if the current debate is a root debate or a child debate
+        if ($debate->root_id !== null) {
+            // Fetch the root debate
+            $rootDebate = Debate::find($debate->root_id);
+        } else {
+            // Current debate is already a root debate
+            $rootDebate = $debate;
+        }
+    
         // Get all debate IDs in the hierarchy
-        $debateIds = Debate::where('root_id', $debate->id)->orWhere('id', $debate->id)->pluck('id');
-
+        $debateIds = Debate::where('root_id', $rootDebate->id)->orWhere('id', $rootDebate->id)->pluck('id');
+    
         // Total claims: all debates in the hierarchy
         $totalClaims = Debate::whereIn('id', $debateIds)->count();
 
@@ -315,8 +333,8 @@ class DebateController extends Controller
         $totalParticipants = count(array_unique($userIds));
 
         // Total views: views of the root debate only
-        $totalViews = $debate->total_views;
-
+        $totalViews = $rootDebate->total_views;
+    
         // Total contributions: sum of votes, comments, and claims
         $totalComments = DebateComment::whereIn('debate_id', $debateIds)->count();
         $totalContributions = $totalVotes + $totalComments + $totalClaims;

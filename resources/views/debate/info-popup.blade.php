@@ -1,8 +1,8 @@
 <div id="debate-info-popup" class="debate-info-popup-container">
     <div class="debate-info-popup-content">
-        <div class="debate-popup-content__header" style="background-image: url('{{ asset('storage/' . $debate->image) }}');">
+        <div class="debate-popup-content__header" style="background-image: url('{{ asset('storage/' . $rootDebate->image) }}');">
             <span class="info-popup-close-btn">&times;</span>
-            <h1 class="debate-popup-content__header__title">{{ $debate->title }}</h1>
+            <h1 class="debate-popup-content__header__title">{{ $rootDebate->title }}</h1>
         </div>
         
         <div class="debate-popup-content__body">
@@ -50,7 +50,7 @@
             <div class="debate-popup-content__background-info">
                 <h2 class="info-bg-info__title">Background Info</h2>
                 @php
-                    $backgroundInfo = $debate->backgroundinfo;
+                    $backgroundInfo = $rootDebate->backgroundinfo;
                     $isLongText = strlen($backgroundInfo) > 300;
                     $shortText = substr($backgroundInfo, 0, 300);
                 @endphp
@@ -151,38 +151,39 @@
 </style>
 
 <script>
-    
+    // Function to check if URL contains 'from=debate-card'
+    function isOpenFromDebateCard() {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.has('from') && urlParams.get('from') === 'debate-card';
+    }
+
     // Show more/less functionality
     document.addEventListener('DOMContentLoaded', function () {
-
-        // Get the popup
         var popup = document.getElementById("debate-info-popup");
-
-        // Get the <span> element that closes the popup
         var closeInfoPop = document.getElementsByClassName("info-popup-close-btn")[0];
-
-        // When the user clicks on <span> (x), close the popup
-        closeInfoPop.onclick = function() {
-            popup.style.display = "none";
-        }
-
-        // Get the enter button that closes the popup
         var enterSinglePage = document.getElementById("close-info-popup-btn");
 
-        // When the user clicks on enter close the popup
-        enterSinglePage.onclick = function() {
+        // Function to close popup
+        function closePopup() {
             popup.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the popup, close it
+        // Event listeners for closing popup
+        closeInfoPop.onclick = closePopup;
+        enterSinglePage.onclick = closePopup;
+
+        // Close popup when clicking outside
         window.onclick = function(event) {
             if (event.target == popup) {
-                popup.style.display = "none";
+                closePopup();
             }
-        }
+        };
 
-        // Show the popup when the page loads
-        window.onload = function() {
+        // Check if opened from debate card
+        var openedFromDebateCard = isOpenFromDebateCard();
+
+        // Show popup only if opened from debate card
+        if (openedFromDebateCard) {
             popup.style.display = "block";
         }
 
@@ -217,13 +218,13 @@
         }
     });
 
-    // open infor popup when clicked on i btn in debate single page
+    // Function to open info popup when needed (from debate card)
     function openInfoPopup() {
         // Show the info popup
         var popup = document.getElementById("debate-info-popup");
         popup.style.display = "block";
 
-        // Hide the "Enter" button
+        // Optionally hide the "Enter" button if needed
         var enterButton = document.getElementById("close-info-popup-btn");
         enterButton.style.display = "none";
     }
