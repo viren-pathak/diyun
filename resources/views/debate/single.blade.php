@@ -71,12 +71,16 @@
                                                 <span class="comment-count">{{ $ancestor->comments->count() > 0 ? $ancestor->comments->count() : '' }}</span>
                                             </button>
                                         </div>
-                                        <div class="edit-btn-container">
-
-                                        </div>
+                                        @if(auth()->check() && auth()->user()->id === $ancestor->user_id)
+                                            <div class="edit-btn-container" onclick="openEditModal('{{ $ancestor->title }}', '{{ $ancestor->id }}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                                </svg>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="claim-text">
-                                        <p class="claim-text__content">{{ $ancestor->title }}</p>
+                                        <p class="claim-text__content" data-debate-id="{{ $ancestor->id }}">{{ $ancestor->title }}</p>
                                     </div>
                                 </div>
                                 
@@ -156,6 +160,13 @@
                                         <x-progress-bar :value="$averageVotes['debate']" />
                                         <button class="votes-btn" data-target="votesContainer{{ $debate->id }}">Votes</button>
                                     </div>
+                                    @if(auth()->check() && auth()->user()->id === $debate->user_id)
+                                        <div class="edit-btn-container" onclick="openEditModal('{{ $debate->title }}', '{{ $debate->id }}')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                            </svg>
+                                        </div>
+                                    @endif
                                     <div class="comments-btn-conaitner">
                                         <button class="comment-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
@@ -166,7 +177,7 @@
                                     </div>
                                 </div>
                                 <div class="claim-text">
-                                    <p class="claim-text__content">{{ $debate->title }}</p>
+                                    <p class="claim-text__content" data-debate-id="{{ $debate->id }}">{{ $debate->title }}</p>
                                 </div>
                             </div>
                             <div class="comment-form-container" style="display:none;">
@@ -289,9 +300,16 @@
                                                                     <span class="comment-count">{{ $pro->comments->count() > 0 ? $pro->comments->count() : '' }}</span>
                                                                 </button>
                                                             </div>
+                                                            @if(auth()->check() && auth()->user()->id === $pro->user_id)
+                                                                <div class="edit-btn-container" onclick="openEditModal('{{ $pro->title }}', '{{ $pro->id }}')">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                         <div class="claim-text">
-                                                            <p class="claim-text__content">{{ $pro->title }}</p>
+                                                            <p class="claim-text__content" data-debate-id="{{ $pro->id }}">{{ $pro->title }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="comment-form-container" style="display:none;">
@@ -381,9 +399,16 @@
                                                                     <span class="comment-count">{{ $con->comments->count() > 0 ? $con->comments->count() : '' }}</span>
                                                                 </button>
                                                             </div>
+                                                            @if(auth()->check() && auth()->user()->id === $con->user_id)
+                                                                <div class="edit-btn-container" onclick="openEditModal('{{ $con->title }}', '{{ $con->id }}')">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                                                    </svg>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                         <div class="claim-text">
-                                                            <p class="claim-text__content">{{ $con->title }}</p>
+                                                            <p class="claim-text__content" data-debate-id="{{ $con->id }}">{{ $con->title }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="comment-form-container" style="display:none;">
@@ -567,7 +592,7 @@
         document.querySelectorAll('.claim-card').forEach(card => {
             card.addEventListener('click', (event) => {
                 // Check if the click occurred on the claim header
-                if (!event.target.closest('.claim-header')) {
+                if (!event.target.closest('.claim-header') && !event.target.closest('.debate-title-modal')) {
                     const claimId = card.dataset.debateId;
                     const claimSlug = card.dataset.debateSlug;
                     const newURL = `${window.location.origin}/debate/${claimSlug}?active=${claimId}`;
@@ -662,6 +687,83 @@
             }
         });
     });
+
+
+    /// ###### EDIT DEBATE FUNCTIONALITY
+
+    function openEditModal(currentTitle, debateId, debateSlug) {
+        // Find the debate's claim-text__content element
+        const claimTextContent = document.querySelector(`[data-debate-id="${debateId}"] .claim-text__content`);
+
+        // Add the 'editing-title' class to claim-text__content element
+        claimTextContent.classList.add('editing-title');
+
+        // Create the modal HTML dynamically
+        var modalHtml = `
+            <div id="editModal" class="debate-title-modal">
+                <div class="edit-modal-content">
+                    <form id="edit-title-form">
+                        @csrf
+                        <label for="edit-title-input">Edit Title</label><br>
+                        <input type="text" id="edit-title-input" name="title" value="${currentTitle}"><br>
+                        <button type="button" class="close-btn" onclick="closeEditModal()">Close</button>
+                        <button type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+        `;
+
+        // Insert the modal HTML after the claim-text__content element
+        claimTextContent.insertAdjacentHTML('afterend', modalHtml);
+
+        // Add the event listener for the form submission
+        document.getElementById('edit-title-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var form = event.target;
+            var title = form.title.value;
+
+            fetch(`/debate/update-title/${debateId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    title: title
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the URL if the current debate ID matches the edited one
+                    const currentURL = window.location.href;
+                    if (currentURL.includes(`?active=${debateId}`)) {
+                        const newURL = `${window.location.origin}/debate/${data.slug}?active=${debateId}`;
+                        window.location.href = newURL;
+                    } else {
+                        // Refresh the page to update all elements
+                        location.reload();
+                    }
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }
+
+    function closeEditModal() {
+        var modal = document.getElementById('editModal');
+        if (modal) {
+            const claimTextContent = modal.previousElementSibling;
+            modal.parentNode.removeChild(modal);
+
+            // Remove the 'editing-title' class from the claim-text__content element
+            if (claimTextContent) {
+                claimTextContent.classList.remove('editing-title');
+            }
+        }
+    }
 
 
 </script>

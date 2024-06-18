@@ -607,7 +607,37 @@ class DebateController extends Controller
         }
     }
     
-
+    public function updateDebateTitle(Request $request, $id)
+    {
+        // Find the debate by ID
+        $debate = Debate::findOrFail($id);
+    
+        // Check if the user is authenticated and the owner of the debate
+        if (!auth()->check() || auth()->user()->id !== $debate->user_id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+    
+        // Validate the request
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+    
+        // Generate a unique slug for the updated title
+        $slug = Str::slug($request->input('title'));
+        $existingSlugCount = Debate::where('slug', 'like', "{$slug}%")->where('id', '<>', $id)->count();
+        if ($existingSlugCount > 0) {
+            $slug .= '-' . ($existingSlugCount + 1);
+        }
+    
+        // Update the title and slug
+        $debate->title = $request->title;
+        $debate->slug = $slug;
+        $debate->save();
+    
+        return response()->json(['success' => 'Title updated successfully', 'title' => $debate->title, 'slug' => $debate->slug]);
+    }
+    
+    
 
     public function settings(Request $request, $slug)
     {

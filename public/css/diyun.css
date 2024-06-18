@@ -991,6 +991,14 @@ button.btn-danger.btn.add-cons-btn {
   border-radius:10px
 }
 
+.debate-title-modal{
+  display: block;
+}
+
+.claim-text__content.editing-title {
+  display: none;
+}
+
 
 /***** VOTE PROGRESS BAR *****/
 

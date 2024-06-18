@@ -54,6 +54,7 @@ Route::get('/debate/{slug}', [DebateController::class, 'single'])->name('debate.
 Route::get('/get-child-arguments/{slug}', [DebateController::class, 'getChildArguments'])->name('debate.getChildArguments');
 Route::get('/debate/{slug}/settings', [DebateController::class, 'settings'])->name('settings');
 Route::post('/debate/{slug}/edit', [DebateController::class, 'editRootDebate'])->name('editRootDebate');
+Route::post('/debate/update-title/{id}', [DebateController::class, 'updateDebateTitle'])->name('updateDebateTitle');
 
 
 Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
