@@ -508,6 +508,38 @@ class DebateController extends Controller
         return redirect()->back()->with('success', 'Comment added successfully.');
     }
 
+    public function editComment(Request $request, $commentId)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:500',
+        ]);
+
+        $comment = DebateComment::findOrFail($commentId);
+
+        // Check if the logged-in user is the owner of the comment
+        if (Auth::id() !== $comment->user_id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $comment->comment = $request->comment;
+        $comment->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteComment(Request $request, $id)
+    {
+        $comment = DebateComment::find($id);
+    
+        if ($comment) {
+            $comment->delete();
+            return response()->json(['success' => true]);
+        }
+    
+        return response()->json(['success' => false, 'error' => 'Comment not found'], 404);
+    }
+    
+
     // Method to retrieve all comments for a debate
     public function getAllComments($debate)
     {

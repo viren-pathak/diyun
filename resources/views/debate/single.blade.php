@@ -91,7 +91,7 @@
                                     <div class="comment-container__content">
                                         <ul class="comments-list">
                                             @foreach($ancestor->comments as $comment)
-                                                <li class="comment-box">
+                                                <li class="comment-box" data-comment-id="{{ $comment->id }}">
                                                     <div class="comment-identity-avatar">
                                                         <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
                                                     </div>
@@ -101,7 +101,17 @@
                                                         </div>
                                                         <div class="comment-meta-details">
                                                             <span class="comment-username">{{ $comment->user->username }}</span>
-                                                            <span class="comment-time">{{ $comment->created_at->diffForHumans() }}</span>
+                                                            @if ($comment->created_at != $comment->updated_at)
+                                                                <span class="comment-edited">Edited</span>
+                                                            @endif
+                                                            <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
+                                                            @if(auth()->check() && auth()->user()->id === $comment->user_id)
+                                                                <button class="comment-menu">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                                                    </svg>
+                                                                </button>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </li>
@@ -187,7 +197,7 @@
                                 <div class="comment-container__content">
                                     <ul class="comments-list">
                                         @foreach($debate->comments as $comment)
-                                            <li class="comment-box">
+                                            <li class="comment-box" data-comment-id="{{ $comment->id }}">
                                                 <div class="comment-identity-avatar">
                                                     <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
                                                 </div>
@@ -197,7 +207,17 @@
                                                     </div>
                                                     <div class="comment-meta-details">
                                                         <span class="comment-username">{{ $comment->user->username }}</span>
-                                                        <span class="comment-time">{{ $comment->created_at->diffForHumans() }}</span>
+                                                        @if ($comment->created_at != $comment->updated_at)
+                                                            <span class="comment-edited">Edited</span>
+                                                        @endif
+                                                        <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
+                                                        @if(auth()->check() && auth()->user()->id === $comment->user_id)
+                                                            <button class="comment-menu">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                                                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                                                </svg>
+                                                            </button>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </li>
@@ -319,7 +339,7 @@
                                                         <div class="comment-container__content">
                                                             <ul class="comments-list">
                                                                 @foreach($pro->comments as $comment)
-                                                                    <li class="comment-box">
+                                                                    <li class="comment-box" data-comment-id="{{ $comment->id }}">
                                                                         <div class="comment-identity-avatar">
                                                                             <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
                                                                         </div>
@@ -329,7 +349,17 @@
                                                                             </div>
                                                                             <div class="comment-meta-details">
                                                                                 <span class="comment-username">{{ $comment->user->username }}</span>
-                                                                                <span class="comment-time">{{ $comment->created_at->diffForHumans() }}</span>
+                                                                                @if ($comment->created_at != $comment->updated_at)
+                                                                                    <span class="comment-edited">Edited</span>
+                                                                                @endif
+                                                                                <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
+                                                                                @if(auth()->check() && auth()->user()->id === $comment->user_id)
+                                                                                    <button class="comment-menu">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                                                                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                                                                        </svg>
+                                                                                    </button>
+                                                                                @endif
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -418,7 +448,7 @@
                                                         <div class="comment-container__content">
                                                             <ul class="comments-list">
                                                                 @foreach($con->comments as $comment)
-                                                                    <li class="comment-box">
+                                                                    <li class="comment-box" data-comment-id="{{ $comment->id }}">
                                                                         <div class="comment-identity-avatar">
                                                                             <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
                                                                         </div>
@@ -428,7 +458,17 @@
                                                                             </div>
                                                                             <div class="comment-meta-details">
                                                                                 <span class="comment-username">{{ $comment->user->username }}</span>
-                                                                                <span class="comment-time">{{ $comment->created_at->diffForHumans() }}</span>
+                                                                                @if ($comment->created_at != $comment->updated_at)
+                                                                                    <span class="comment-edited">Edited</span>
+                                                                                @endif
+                                                                                <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
+                                                                                @if(auth()->check() && auth()->user()->id === $comment->user_id)
+                                                                                    <button class="comment-menu">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                                                                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                                                                        </svg>
+                                                                                    </button>
+                                                                                @endif
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -765,6 +805,269 @@
         }
     }
 
+    /// ####### COMMENT FUNCTIONALITY
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+         /****** EDIT COMMENT ********/
+
+        let currentEditForm = null;
+
+        // Function to handle comment-menu button click
+        document.querySelectorAll('.comment-menu').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent hiding the comment-form-container
+                const commentBox = this.closest('.comment-box');
+                const commentMetaDetails = commentBox.querySelector('.comment-meta-details');
+
+                // Hide the comment-meta-details div
+                commentMetaDetails.style.display = 'none';
+
+                // Create the comments-action div dynamically
+                const commentsActionHtml = `
+                    <div class="comments-action">
+                        <button class="edit-comment-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                            </svg>
+                        </button>
+                        <button class="delete-comment-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                            </svg>
+                        </button>
+                        <button class="close-comments-action-btn">Close</button>
+                    </div>
+                `;
+
+                // Insert the comments-action div after the comment-meta-details div
+                commentMetaDetails.insertAdjacentHTML('afterend', commentsActionHtml);
+
+                // Add event listener to the close button to remove the comments-action div
+                commentMetaDetails.nextElementSibling.querySelector('.close-comments-action-btn').addEventListener('click', function(event) {
+                    event.stopPropagation(); // Stop event propagation
+                    const commentsActionDiv = this.closest('.comments-action');
+                    if (commentsActionDiv) {
+                        commentsActionDiv.remove();
+                    }
+                    // Show the comment-meta-details div again
+                    commentMetaDetails.style.display = 'block';
+                });
+
+                // Add event listener for edit-comment-btn 
+                const editCommentBtn = commentMetaDetails.nextElementSibling.querySelector('.edit-comment-btn');
+                if (editCommentBtn) {
+                    editCommentBtn.addEventListener('click', handleEditComment);
+                }
+
+                // Add event listener for delete-comment-btn
+                const deleteCommentBtn = commentMetaDetails.nextElementSibling.querySelector('.delete-comment-btn');
+                if (deleteCommentBtn) {
+                    deleteCommentBtn.addEventListener('click', handleDeleteComment);
+                }
+            });
+        });
+
+        // Function to handle edit comment
+        function handleEditComment(event) {
+            event.stopPropagation(); // Prevent hiding the comment-form-container
+
+            // Close the currently open edit form, if any
+            if (currentEditForm) {
+                currentEditForm.querySelector('.edit-comment-container').remove();
+                currentEditForm.querySelector('.comment-box-content').style.display = 'block';
+                currentEditForm.querySelector('.comment-meta-details').style.display = 'block';
+                currentEditForm = null;
+            }
+
+            const commentBox = this.closest('.comment-box');
+            const commentContent = commentBox.querySelector('.comment-box-content');
+            const commentText = commentContent.querySelector('.comment-content__text').innerText;
+
+            // Create an input field and replace the comment text with it
+            const editCommentHtml = `
+                <div class="edit-comment-container">
+                    <input type="text" class="edit-comment-input" value="${commentText}">
+                    <button class="save-comment-btn">Save</button>
+                    <button class="cancel-edit-comment-btn">Cancel</button>
+                </div>
+            `;
+            commentContent.style.display = 'none';
+            commentBox.insertAdjacentHTML('beforeend', editCommentHtml);
+
+            // Close the comments-action div
+            const commentsActionDiv = this.closest('.comments-action');
+            if (commentsActionDiv) {
+                commentsActionDiv.remove();
+            }
+
+            // Set the current edit form
+            currentEditForm = commentBox;
+
+            // Add event listener for save-comment-btn
+            commentBox.querySelector('.save-comment-btn').addEventListener('click', function() {
+                const newCommentText = commentBox.querySelector('.edit-comment-input').value;
+                const commentId = commentBox.dataset.commentId;
+
+                // Perform AJAX call to save the edited comment
+                fetch(`/comments/edit/${commentId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        comment: newCommentText
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the comment text in the DOM
+                        commentContent.querySelector('.comment-content__text').innerText = newCommentText;
+                        commentContent.style.display = 'block';
+                        commentBox.querySelector('.edit-comment-container').remove();
+                        commentBox.querySelector('.comment-meta-details').style.display = 'block';
+
+                        // Add edited text below the username
+                        let editedText = commentBox.querySelector('.comment-edited');
+                        if (!editedText) {
+                            const commentUsername = commentBox.querySelector('.comment-username');
+                            const commentTime = commentBox.querySelector('.comment-time');
+                            commentUsername.insertAdjacentHTML('afterend', '<span class="comment-edited">Edited</span>');
+                        }
+
+                        // Clear the current edit form reference
+                        currentEditForm = null;
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Add event listener for cancel-edit-comment-btn
+            commentBox.querySelector('.cancel-edit-comment-btn').addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent hiding the comment-form-container
+                // Remove the input field and buttons
+                commentBox.querySelector('.edit-comment-container').remove();
+                // Show the original comment text
+                commentContent.style.display = 'block';
+                // Show the comment-meta-details div again
+                commentBox.querySelector('.comment-meta-details').style.display = 'block';
+
+                // Clear the current edit form reference
+                currentEditForm = null;
+            });
+        }
+
+
+
+        /****** DELETE COMMENT ********/
+
+        // Function to handle delete comment
+        function handleDeleteComment(event) {
+            event.stopPropagation(); // Prevent hiding the comment-form-container
+
+            const commentBox = this.closest('.comment-box');
+            openDeleteModal(commentBox);
+        }
+
+        // Function to open the delete modal
+        function openDeleteModal(commentBox) {
+            const deleteModalHtml = `
+                <div class="delete-comment-modal">
+                    <div class="modal-content">
+                        <span class="close close-delete-modal">&times;</span>
+                        <p>Delete this message?</p>
+                        <button class="confirm-delete-btn">Delete</button>
+                        <button class="cancel-delete-btn">Close</button>
+                    </div>
+                </div>
+                <style>
+                    .delete-comment-modal {
+                        position: fixed;
+                        z-index: 1;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: auto;
+                        background-color: rgba(0,0,0,0.4);
+                    }
+                    .modal-content {
+                        background-color: #fefefe;
+                        margin: 15% auto;
+                        padding: 20px;
+                        border: 1px solid #888;
+                        width: 80%;
+                    }
+                    .close.close-delete-modal {
+                        color: #aaa;
+                        float: right;
+                        font-size: 28px;
+                        font-weight: bold;
+                    }
+                    .close.close-delete-modal:hover,
+                    .close.close-delete-modal:focus {
+                        color: black;
+                        text-decoration: none;
+                        cursor: pointer;
+                    }
+                </style>
+            `;
+
+            // Append modal HTML to body
+            document.body.insertAdjacentHTML('beforeend', deleteModalHtml);
+
+            // Add event listeners to the modal buttons
+            document.querySelector('.delete-comment-modal .close.close-delete-modal').addEventListener('click', function(event) {
+                event.stopPropagation();
+                closeDeleteModal();
+            });
+            document.querySelector('.delete-comment-modal .cancel-delete-btn').addEventListener('click', function(event) {
+                event.stopPropagation();
+                closeDeleteModal();
+            });
+            document.querySelector('.delete-comment-modal .confirm-delete-btn').addEventListener('click', function(event) {
+                event.stopPropagation();
+                deleteComment(commentBox);
+            });
+        }
+
+        // Function to close the delete modal
+        function closeDeleteModal() {
+            const modal = document.querySelector('.delete-comment-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Function to delete the comment
+        function deleteComment(commentBox) {
+            const commentId = commentBox.dataset.commentId;
+
+            // Perform AJAX call to delete the comment
+            fetch(`/comments/delete/${commentId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the comment from the DOM
+                    commentBox.remove();
+                    closeDeleteModal();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
 
 </script>
 

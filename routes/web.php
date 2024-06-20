@@ -65,6 +65,8 @@ Route::get('/tags', [DebateController::class, 'getAllTags'])->name('tags');
 Route::post('/add-pro/{id}', [DebateController::class, 'addPro'])->name('debate.addPro');
 Route::post('/add-con/{id}', [DebateController::class, 'addCon'])->name('debate.addCon');
 Route::post('/comment/{id}', [DebateController::class, 'addComment'])->name('debate.comment');
+Route::post('/comments/edit/{comment}', [DebateController::class, 'editComment'])->name('comments.edit');
+Route::delete('/comments/delete/{id}', [DebateController::class, 'deleteComment'])->name('comments.delete');
 
 Route::post('/debate/{debate}/vote', [DebateController::class, 'vote'])->name('debate.vote');
 Route::delete('/debate/{debateId}/vote', [DebateController::class, 'deleteVote'])->name('debate.deleteVote');
