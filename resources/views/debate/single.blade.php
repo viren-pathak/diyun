@@ -270,30 +270,12 @@
                                 <div class="column-box--header--pro--contents">
                                     <p class="column-box--pro--info">Pros</p>
                                     <button type="button" class="btn-danger btn add-pro-btn" data-authenticated="{{ auth()->check() }}">+</button>
-                                </div>
-                                <div class="add-pro-form-container add-child-form-container" style="display:none;">
-                                    <form action="{{ route('debate.addPro', $debate->id) }}" method="POST" class="add-pro-form">
-                                        @csrf
-                                        <input class="child-form-input" type="text" name="title" placeholder="Enter pro argument" maxlength="500">
-                                        <p class="char-count">500 characters remaining</p>
-                                        <button class="child-form-submit" type="submit">Submit</button>
-                                        <button type="button" class="close-form-btn">Close</button>
-                                    </form>
-                                </div>
+                                </div>                                
                             </div>
                             <div class="column-box column-box--header--con">
                                 <div class="column-box--header--con--contents">
                                     <p class="column-box--con--info">Cons</p>
                                     <button type="button" class="btn-danger btn add-cons-btn" data-authenticated="{{ auth()->check() }}">+</button>
-                                </div>
-                                <div class="add-con-form-container add-child-form-container" style="display:none;">
-                                    <form action="{{ route('debate.addCon', $debate->id) }}" method="POST" class="add-con-form">
-                                        @csrf
-                                        <input class="child-form-input" type="text" name="title" placeholder="Enter con argument" maxlength="500">
-                                        <p class="char-count">500 characters remaining</p>
-                                        <button class="child-form-submit" type="submit">Submit</button>
-                                        <button type="button" class="close-form-btn">Close</button>
-                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -301,6 +283,17 @@
                         <div class="columns-container__column-contents">
                             <div class="column-box column-box--claims column-box--claims-pro">
                                 <ul class="column__content--pros">
+                                    <li class="new-claim-editor new-pro-claim">
+                                        <div class="add-pro-form-container add-child-form-container" style="display:none;">
+                                            <form action="{{ route('debate.addPro', $debate->id) }}" method="POST" class="add-pro-form">
+                                                @csrf
+                                                <input class="child-form-input" type="text" name="title" placeholder="Enter pro argument" maxlength="500">
+                                                <p class="char-count">500 characters remaining</p>
+                                                <button class="child-form-submit" type="submit">Submit</button>
+                                                <button type="button" class="close-form-btn">Close</button>
+                                            </form>
+                                        </div>
+                                    </li>                                      
                                     @foreach($pros as $pro)
                                         <li class="pro-argument">
                                             <div class="actionable-claim-container">
@@ -410,6 +403,17 @@
                             </div>
                             <div class="column-box column-box--claims column-box--claims-con">
                                 <ul class="column__content--cons">
+                                    <li class="new-claim-editor new-con-claim">
+                                        <div class="add-con-form-container add-child-form-container" style="display:none;">
+                                            <form action="{{ route('debate.addCon', $debate->id) }}" method="POST" class="add-con-form">
+                                                @csrf
+                                                <input class="child-form-input" type="text" name="title" placeholder="Enter con argument" maxlength="500">
+                                                <p class="char-count">500 characters remaining</p>
+                                                <button class="child-form-submit" type="submit">Submit</button>
+                                                <button type="button" class="close-form-btn">Close</button>
+                                            </form>
+                                        </div>
+                                    </li>
                                     @foreach($cons as $con)
                                         <li class="con-argument">
                                             <div class="actionable-claim-container">
