@@ -8,6 +8,7 @@ use App\Models\Tag;
 use App\Models\DebateComment;
 use App\Models\Vote;
 use App\Models\DebateRole;
+use App\Models\DebateBookmark;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -188,7 +189,10 @@ class DebateController extends Controller
         // Get debate data
         $debatePopupData = $this->getDebatePopupData($debate);
 
-        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData'));
+        // Get the user's bookmarks in the current debate hierarchy
+        $bookmarkedDebates = $this->getUserBookmarks($slug);
+
+        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData', 'bookmarkedDebates'));
     }
     
     
@@ -860,5 +864,60 @@ class DebateController extends Controller
         return $sortedContributions;
     }
     
+
+    public function bookmark(Request $request)
+    {
+        // Validate request data
+        $request->validate([
+            'debate_id' => 'required',
+        ]);
+    
+        // Get the authenticated user's ID
+        $userId = auth()->id();
+    
+        // Check if the debate is already bookmarked
+        $bookmark = DebateBookmark::where('user_id', $userId)->where('debate_id', $request->debate_id)->first();
+    
+        if ($bookmark) {
+            // If bookmarked, remove the bookmark
+            $bookmark->delete();
+            return response()->json(['isBookmarked' => false, 'message' => 'Bookmark removed successfully']);
+        } else {
+            // If not bookmarked, add the bookmark
+            DebateBookmark::create([
+                'user_id' => $userId,
+                'debate_id' => $request->debate_id,
+            ]);
+            return response()->json(['isBookmarked' => true, 'message' => 'Debate bookmarked successfully!']);
+        }
+    }
+
+        
+    public function isBookmarked(Request $request)
+{
+    $debateId = $request->input('debate_id');
+    $isBookmarked = DebateBookmark::where('debate_id', $debateId)->where('user_id', Auth::id())->exists();
+
+    return response()->json(['isBookmarked' => $isBookmarked]);
+}
+    
+public function getUserBookmarks($slug)
+{
+    // Find the root debate by slug
+    $debate = Debate::where('slug', $slug)->firstOrFail();
+
+    // Get the root debate ID
+    $rootId = $this->findRootId($debate->id);
+
+    // Get all debates in the hierarchy
+    $debateIds = Debate::where('root_id', $rootId)->orWhere('id', $rootId)->pluck('id');
+
+    // Get all bookmarked debates by the current user in the hierarchy
+    $bookmarkedDebates = DebateBookmark::whereIn('debate_id', $debateIds)
+                                 ->where('user_id', Auth::id())
+                                 ->get();
+
+    return $bookmarkedDebates;
+}
 
 }

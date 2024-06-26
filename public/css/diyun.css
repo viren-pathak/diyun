@@ -761,7 +761,8 @@ p.topbar-debate-title {
 
 
 .single-sidebar-menu__item-myClaims,
-.single-sidebar-menu__item-myContri{
+.single-sidebar-menu__item-myContri,
+.single-sidebar-menu__item-myBookmarks{
   position: absolute;
   left: -250px; /* Hidden by default */
   width: 250px;
@@ -775,7 +776,8 @@ p.topbar-debate-title {
 }
 
 .single-sidebar-menu__item-myClaims.active,
-.single-sidebar-menu__item-myContri.active {
+.single-sidebar-menu__item-myContri.active,
+.single-sidebar-menu__item-myBookmarks.active {
   left: 0;
 }
 

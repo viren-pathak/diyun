@@ -56,6 +56,9 @@ Route::get('/debate/{slug}/settings', [DebateController::class, 'settings'])->na
 Route::post('/debate/{slug}/edit', [DebateController::class, 'editRootDebate'])->name('editRootDebate');
 Route::post('/debate/update-title/{id}', [DebateController::class, 'updateDebateTitle'])->name('updateDebateTitle');
 
+Route::post('/debate/bookmark', [DebateController::class, 'bookmark'])->name('debate.bookmark');
+Route::get('debate/{slug}/bookmarks', 'DebateController@getUserBookmarks')->name('debate.bookmarks');
+Route::post('/debate/is-bookmarked', [DebateController::class, 'isBookmarked'])->name('debate.isBookmarked');
 
 Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
 

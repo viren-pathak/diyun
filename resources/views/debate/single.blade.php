@@ -63,6 +63,13 @@
                                             <x-progress-bar :value="$averageVotes['ancestors'][$ancestor->id]" />
                                             <button class="votes-btn" data-target="votesContainerAncestor{{ $ancestor->id }}">Votes</button>
                                         </div>
+                                        <div class="control-item-btn-container">
+                                            <button class="control-item-btn">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                                </svg>
+                                            </button>
+                                        </div>
                                         <div class="comments-btn-conaitner">
                                             <button class="comment-btn">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
@@ -169,6 +176,13 @@
                                         {{-- PRGRESS BAR BLADE in views>components>progress-bar.blade.php --}}
                                         <x-progress-bar :value="$averageVotes['debate']" />
                                         <button class="votes-btn" data-target="votesContainer{{ $debate->id }}">Votes</button>
+                                    </div>
+                                    <div class="control-item-btn-container">
+                                        <button class="control-item-btn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                            </svg>
+                                        </button>
                                     </div>
                                     @if(auth()->check() && auth()->user()->id === $debate->user_id)
                                         <div class="edit-btn-container" onclick="openEditModal('{{ $debate->title }}', '{{ $debate->id }}')">
@@ -305,6 +319,13 @@
                                                                 <x-progress-bar :value="$averageVotes['pros'][$pro->id]" />
                                                                 <button class="votes-btn" data-target="votesContainerPro{{ $pro->id }}">Votes</button>
                                                             </div>
+                                                            <div class="control-item-btn-container">
+                                                                <button class="control-item-btn">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
                                                             <div class="comments-btn-conaitner">
                                                                 <button class="comment-btn">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
@@ -424,6 +445,13 @@
                                                                 {{-- PRGRESS BAR BLADE in views>components>progress-bar.blade.php --}}
                                                                 <x-progress-bar :value="$averageVotes['cons'][$con->id]" />
                                                                 <button class="votes-btn" data-target="votesContainerCon{{ $con->id }}">Votes</button>
+                                                            </div>
+                                                            <div class="control-item-btn-container">
+                                                                <button class="control-item-btn">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                                                    </svg>
+                                                                </button>
                                                             </div>
                                                             <div class="comments-btn-conaitner">
                                                                 <button class="comment-btn">
@@ -1070,6 +1098,226 @@
                 }
             })
             .catch(error => console.error('Error:', error));
+        }
+    });
+
+    
+    ///// ###### DEBATE CONTROL FUNCTIONALITY 
+    
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Function to handle control-item button click
+        document.querySelectorAll('.control-item-btn-container').forEach(container => {
+            container.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const debateCard = this.closest('.claim-card');
+                const debateId = debateCard.getAttribute('data-debate-id'); // Fetch debate_id from nearest claim-card
+                openControlModal(this, debateId); // Pass debate_id to modal function
+            });
+        });
+
+        // Function to open the control modal
+        function openControlModal(container, debateId) {
+            // Create the control modal HTML
+            const controlModalHtml = `
+                <div class="control-modal">
+                    <div class="modal-content">
+                        <span class="close close-control-modal">&times;</span>
+                        @if (auth()->check())
+                        <button class="bookmark-btn" data-debate-id="${debateId}">Loading...</button>
+                        @endif
+                        <button class="copy-claim-text-btn">Copy Claim Text</button>
+                        <button class="claim-link-btn">Copy Claim Link</button>
+                        <button class="report-claim-btn">Report Claim</button>
+                    </div>
+                </div>
+                <style>
+                    .control-modal {
+                        position: fixed;
+                        z-index: 1;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: auto;
+                        background-color: rgba(0,0,0,0.4);
+                    }
+                    .flash-modal {
+                        position: fixed;
+                        top: 20%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background-color: white;
+                        padding: 15px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        z-index: 9999;
+                        display: none;
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: #6a7480;
+                        border-radius: 5px;
+                    }
+                </style>
+            `;
+
+            // Append modal HTML to body
+            document.body.insertAdjacentHTML('beforeend', controlModalHtml);
+
+            // Add event listeners to the modal buttons
+            document.querySelector('.control-modal .close.close-control-modal').addEventListener('click', function(event) {
+                event.stopPropagation();
+                closeControlModal();
+            });
+            document.querySelector('.control-modal .copy-claim-text-btn').addEventListener('click', function(event) {
+                event.stopPropagation();
+                copyClaimText(container);
+                closeControlModal();
+            });
+            document.querySelector('.control-modal .claim-link-btn').addEventListener('click', function(event) {
+                event.stopPropagation();
+                copyClaimLink(container, debateId);
+                closeControlModal();
+            });
+            document.querySelector('.control-modal .report-claim-btn').addEventListener('click', function(event) {
+                event.stopPropagation();
+                reportClaim();
+                closeControlModal();
+            });
+
+            // Add event listener for bookmark button
+            document.querySelector('.control-modal .bookmark-btn').addEventListener('click', function(event) {
+                event.stopPropagation();
+                const debateId = this.getAttribute('data-debate-id');
+                toggleBookmark(debateId);
+                closeControlModal();
+            });
+
+            // Add event listener for clicking outside the modal content
+            document.querySelector('.control-modal').addEventListener('click', function(event) {
+                if (event.target === this) {
+                    closeControlModal();
+                }
+            });
+
+            // Fetch bookmark status and update the button text
+            fetchBookmarkStatus(debateId);
+        }
+
+        // Function to close the control modal
+        function closeControlModal() {
+            const modal = document.querySelector('.control-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Function to fetch bookmark status
+        function fetchBookmarkStatus(debateId) {
+            fetch('{{ route('debate.isBookmarked') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ debate_id: debateId })
+            }).then(response => response.json())
+            .then(data => {
+                const bookmarkBtn = document.querySelector('.control-modal .bookmark-btn');
+                if (data.isBookmarked) {
+                    bookmarkBtn.textContent = 'Remove Bookmark';
+                    bookmarkBtn.dataset.bookmarked = 'true';
+                } else {
+                    bookmarkBtn.textContent = 'Bookmark';
+                    bookmarkBtn.dataset.bookmarked = 'false';
+                }
+            }).catch(err => {
+                console.error('Failed to fetch bookmark status: ', err);
+            });
+        }
+
+        // Function to handle toggling bookmark status
+        function toggleBookmark(debateId) {
+            const bookmarkBtn = document.querySelector('.control-modal .bookmark-btn');
+            const isBookmarked = bookmarkBtn.dataset.bookmarked === 'true';
+
+            // AJAX request to toggle bookmark status
+            fetch('{{ route('debate.bookmark') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ debate_id: debateId })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.isBookmarked) {
+                    bookmarkBtn.textContent = 'Already Bookmarked';
+                    bookmarkBtn.dataset.bookmarked = 'true';
+                    showFlashModal('Debate bookmarked successfully!');
+                } else {
+                    bookmarkBtn.textContent = 'Bookmark';
+                    bookmarkBtn.dataset.bookmarked = 'false';
+                    showFlashModal('Bookmark removed successfully!');
+                }
+            }).catch(err => {
+                console.error('Failed to toggle bookmark status: ', err);
+            });
+        }
+
+        // Function to copy claim text
+        function copyClaimText(container) {
+            const debateCard = container.closest('.claim-card');
+            const claimTextElement = debateCard.querySelector('.claim-text__content');
+            if (claimTextElement) {
+                const claimText = claimTextElement.textContent;
+                navigator.clipboard.writeText(claimText).then(() => {
+                    showFlashModal('Claim text copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            }
+        }
+
+        // Function to copy claim link
+        function copyClaimLink(container, debateId) {
+            const debateCard = container.closest('.claim-card');
+            const debateSlug = debateCard.getAttribute('data-debate-slug'); // Fetch debate_slug from nearest claim-card
+            if (debateSlug) {
+                const claimLink = `${window.location.origin}/debate/${debateSlug}?active=${debateId}`;
+                navigator.clipboard.writeText(claimLink).then(() => {
+                    showFlashModal('Claim link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy link: ', err);
+                });
+            }
+        }
+
+        // Function to show flash modal
+        function showFlashModal(message) {
+            // Create the flash modal HTML
+            const flashModalHtml = `
+                <div class="flash-modal">${message}</div>
+            `;
+
+            // Append flash modal HTML to body
+            document.body.insertAdjacentHTML('beforeend', flashModalHtml);
+
+            // Show the flash modal
+            const flashModal = document.querySelector('.flash-modal');
+            flashModal.style.display = 'block';
+
+            // Remove the flash modal after 2 seconds
+            setTimeout(() => {
+                flashModal.remove();
+            }, 2000);
+        }
+
+        // Function to report claim
+        function reportClaim() {
+            const subject = encodeURIComponent('Report Claim');
+            const body = encodeURIComponent('I would like to report this claim.');
+            const mailtoLink = `mailto:jmbliss83@gmail.com?subject=${subject}&body=${body}`;
+            window.location.href = mailtoLink;
         }
     });
 

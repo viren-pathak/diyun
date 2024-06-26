@@ -24,7 +24,7 @@
                 {{-- Root Debate Title --}}
                 <div class="topbar-title debate-single-title">
                     @isset($rootDebate)
-                    <a href="/{{ $rootDebate->slug }}?active={{ $rootDebate->id }}">
+                    <a href="/debate/{{ $rootDebate->slug }}?active={{ $rootDebate->id }}">
                         <p class="topbar-debate-title">{{ $rootDebate->title }}</p>
                     </a>
                     @endisset

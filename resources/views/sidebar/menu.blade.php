@@ -123,6 +123,14 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-menu-item menu-item-without-svg sidebar-menu-item-myBookmark">
+                        <a class="menu-link" href="#">
+                            <span class="icon-svg">
+                            </span>
+                            My Bookmarks
+                        </a>
+                    </li>
+
                     <li class="sidebar-menu-item menu-item-without-svg">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
@@ -174,6 +182,12 @@
                     @endisset
                 </div>
 
+                <div class="single-sidebar-menu__item-myBookmarks">
+                    @isset($bookmarkedDebates)
+                        @include('sidebar.myBookmarks')
+                    @endisset
+                </div>
+
                 <div class="single-sidebar-menu__item-mySugClaims"></div>
                 <div class="single-sidebar-menu__item-mySugCom"></div>
             @endauth
@@ -192,6 +206,7 @@
         $('.single-sidebar-menu__item-back').click(function() {
             $('.single-sidebar-menu__item-myClaims').removeClass('active');
             $('.single-sidebar-menu__item-myContri').removeClass('active');
+            $('.single-sidebar-menu__item-myBookmarks').removeClass('active');
         });
 
 
@@ -201,5 +216,10 @@
             $('.single-sidebar-menu__item-myContri').toggleClass('active');
         });
 
+        // MY BOOKMARKS DIV OPEN CLOSE
+
+        $('.sidebar-menu-item-myBookmark').click(function() {
+            $('.single-sidebar-menu__item-myBookmarks').toggleClass('active');
+        });
 
     });</script>
