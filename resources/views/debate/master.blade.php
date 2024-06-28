@@ -19,6 +19,7 @@
 
         <!-- Styles -->
         <link rel="icon" href="{{ asset('/uploads/Favicon.png') }}" type="image/x-icon"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
        
     </head>
     <body class="antialiased">

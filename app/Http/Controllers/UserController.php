@@ -142,7 +142,10 @@ class UserController extends Controller
 
         // Attempt to log in
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return response()->json(['success' => true, 'message' => 'Login successful!', 'redirect_url' => route('home')]);
+            // Determine where to redirect after login
+            $redirectUrl = $request->input('redirect_url') ?: route('home');
+    
+            return response()->json(['success' => true, 'message' => 'Login successful!', 'redirect_url' => $redirectUrl]);
         }
 
         // Check if the email exists and the password is incorrect

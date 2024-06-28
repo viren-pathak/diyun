@@ -9,10 +9,14 @@ use App\Models\DebateComment;
 use App\Models\Vote;
 use App\Models\DebateRole;
 use App\Models\DebateBookmark;
+use App\Models\DebateInviteLink;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DebateInvite;
+
 
 class DebateController extends Controller
 {
@@ -894,30 +898,80 @@ class DebateController extends Controller
 
         
     public function isBookmarked(Request $request)
-{
-    $debateId = $request->input('debate_id');
-    $isBookmarked = DebateBookmark::where('debate_id', $debateId)->where('user_id', Auth::id())->exists();
+    {
+        $debateId = $request->input('debate_id');
+        $isBookmarked = DebateBookmark::where('debate_id', $debateId)->where('user_id', Auth::id())->exists();
 
-    return response()->json(['isBookmarked' => $isBookmarked]);
-}
+        return response()->json(['isBookmarked' => $isBookmarked]);
+    }
     
-public function getUserBookmarks($slug)
-{
-    // Find the root debate by slug
-    $debate = Debate::where('slug', $slug)->firstOrFail();
+    public function getUserBookmarks($slug)
+    {
+        // Find the root debate by slug
+        $debate = Debate::where('slug', $slug)->firstOrFail();
 
-    // Get the root debate ID
-    $rootId = $this->findRootId($debate->id);
+        // Get the root debate ID
+        $rootId = $this->findRootId($debate->id);
 
-    // Get all debates in the hierarchy
-    $debateIds = Debate::where('root_id', $rootId)->orWhere('id', $rootId)->pluck('id');
+        // Get all debates in the hierarchy
+        $debateIds = Debate::where('root_id', $rootId)->orWhere('id', $rootId)->pluck('id');
 
-    // Get all bookmarked debates by the current user in the hierarchy
-    $bookmarkedDebates = DebateBookmark::whereIn('debate_id', $debateIds)
-                                 ->where('user_id', Auth::id())
-                                 ->get();
+        // Get all bookmarked debates by the current user in the hierarchy
+        $bookmarkedDebates = DebateBookmark::whereIn('debate_id', $debateIds)
+                                    ->where('user_id', Auth::id())
+                                    ->get();
 
-    return $bookmarkedDebates;
-}
+        return $bookmarkedDebates;
+    }
 
+    
+    public function sendInvite(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'role' => 'required|string',
+            'debate_id' => 'required|integer'
+        ]);
+    
+        // Fetch the invited user by email
+        $invitedUser = User::where('email', $request->email)->first();
+    
+        // If the user doesn't exist in the system, return an error message
+        if (!$invitedUser) {
+            return response()->json(['error' => 'User not registered'], 404);
+        }
+    
+        // Check if the user already has a role in the debate
+        $existingRole = DebateRole::where('user_id', $invitedUser->id)
+            ->where('root_id', $request->debate_id)
+            ->first();
+    
+        if ($existingRole) {
+            return response()->json(['error' => 'User already in debate'], 400);
+        }
+    
+        // Fetch the debate
+        $debate = Debate::findOrFail($request->debate_id);
+    
+        // Get the authenticated user (invitedBy)
+        $invitedBy = Auth::user();
+    
+        // Construct the invite URL
+        $inviteUrl = url('/debate/' . $debate->slug . '?active=' . $request->debate_id . '&invite' . '&role=' . $request->role);
+        $inviteMessage = $request->message;
+    
+        // Send the invite email
+        Mail::to($request->email)->send(new DebateInvite($inviteUrl, $inviteMessage, $invitedBy, $debate));
+    
+        // Create DebateRole entry for the invited user
+        DebateRole::create([
+            'root_id' => $request->debate_id,
+            'user_id' => $invitedUser->id,
+            'role' => $request->role,
+        ]);
+    
+        return response()->json(['success' => true]);
+    }
+
+    
 }

@@ -155,13 +155,16 @@ $(document).ready(function() {
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('login') }}',
-                    data: $(this).serialize(),
+                    data: $(this).serialize() + '&redirect_url=' + encodeURIComponent(window.location.href),
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
                             $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
                             $('#loginForm').trigger('reset');
-                            window.location.href = response.redirect_url;
+
+                            // Check if there's a redirect URL
+                            var redirectUrl = response.redirect_url || '{{ route('home') }}';
+                            window.location.href = redirectUrl;
                         } else {
                             $('#message').html('<div class="alert alert-danger">' + response.message + '</div>');
                         }
@@ -179,4 +182,5 @@ $(document).ready(function() {
                 });
             });
         });
+
 </script>

@@ -57,7 +57,7 @@ Route::post('/debate/{slug}/edit', [DebateController::class, 'editRootDebate'])-
 Route::post('/debate/update-title/{id}', [DebateController::class, 'updateDebateTitle'])->name('updateDebateTitle');
 
 Route::post('/debate/bookmark', [DebateController::class, 'bookmark'])->name('debate.bookmark');
-Route::get('debate/{slug}/bookmarks', 'DebateController@getUserBookmarks')->name('debate.bookmarks');
+Route::get('debate/{slug}/bookmarks', [DebateController::class, 'getUserBookmarks'])->name('debate.bookmarks');
 Route::post('/debate/is-bookmarked', [DebateController::class, 'isBookmarked'])->name('debate.isBookmarked');
 
 Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
@@ -74,6 +74,7 @@ Route::delete('/comments/delete/{id}', [DebateController::class, 'deleteComment'
 Route::post('/debate/{debate}/vote', [DebateController::class, 'vote'])->name('debate.vote');
 Route::delete('/debate/{debateId}/vote', [DebateController::class, 'deleteVote'])->name('debate.deleteVote');
 
+Route::post('/debate/sendInvite', [DebateController::class, 'sendInvite'])->name('debate.sendInvite');
 
 /***** ROUTES FOR static PAGES *****/
 
