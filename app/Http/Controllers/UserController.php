@@ -166,13 +166,14 @@ class UserController extends Controller
         return redirect("/")->withSuccess('You are not allowed to access');
     }
     
-    public function logout()
+    public function logout(Request $request)
     {
+        $redirectTo = $request->input('redirect_to', '/');
         Session::flush();
         Auth::logout();
-        return Redirect("/");
+        return redirect($redirectTo);
     }
-
+    
         public function user_forget(Request $request)
     {
         return view('auth.forget-password');

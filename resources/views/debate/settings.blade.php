@@ -121,7 +121,7 @@
                                     <div class="participant-pers-info">
                                         <p class="debate-participant-name">{{ $participant->name }}</p>
                                         <div class="debate-participant-avatar">
-                                            <img src="{{ $participant->profile_picture }}" alt="{{ $participant->name }}" >
+                                            <img src="{{ $participant->profile_picture_url }}" alt="{{ $participant->name }}">
                                         </div>
                                     </div>
                                     <div class="participant-debate-role">
@@ -133,6 +133,7 @@
                             @endforeach
                         </ul>
                     </div>
+
                 </div>
 
             @endif

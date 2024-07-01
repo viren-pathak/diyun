@@ -29,7 +29,7 @@
                     @auth
                         <button onclick="openMultistepForm()">New +</button>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+                            <a class="nav-link" href="{{ route('logout', ['redirect_to' => url()->current()]) }}">Logout</a>
                         </li>
 
                     @endauth

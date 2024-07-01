@@ -457,6 +457,9 @@ class DebateController extends Controller
         $debate->root_id = $rootId; // Set the root debate ID
         $debate->save();
 
+        // Check and assign role
+        $this->checkAndAssignRole(Auth::id(), $rootId, 'writer');
+    
         return redirect()->back()->with('success', 'Pro argument added successfully');
     }
 
@@ -485,6 +488,9 @@ class DebateController extends Controller
         $debate->root_id = $rootId; // Set the root debate ID
         $debate->save();
 
+        // Check and assign role
+        $this->checkAndAssignRole(Auth::id(), $rootId, 'writer');
+    
         return redirect()->back()->with('success', 'Con argument added successfully');
     }
     
@@ -513,6 +519,12 @@ class DebateController extends Controller
         $comment->comment = $request->comment;
         $comment->save();
 
+        // Find the root debate ID
+        $rootId = $this->findRootId($debateId);
+    
+        // Check and assign role
+        $this->checkAndAssignRole(Auth::id(), $rootId, 'suggester');
+    
         return redirect()->back()->with('success', 'Comment added successfully.');
     }
 
@@ -699,27 +711,18 @@ class DebateController extends Controller
     // New method to retrieve all participants in the debate hierarchy
     private function getParticipants($rootDebate)
     {
-        // Retrieve all debates in the hierarchy
-        $debateIds = Debate::where('id', $rootDebate->id)
-            ->orWhere('root_id', $rootDebate->id)
-            ->pluck('id')
-            ->toArray();
-    
-        // Retrieve all users who created the debates
-        $debateUsers = User::whereIn('id', Debate::whereIn('id', $debateIds)->pluck('user_id'))->get();
-    
-        // Retrieve all users who commented on the debates
-        $commentUsers = User::whereIn('id', DebateComment::whereIn('debate_id', $debateIds)->pluck('user_id'))->get();
-    
-        // Merge and return unique users
-        $participants = $debateUsers->merge($commentUsers)->unique('id');
-    
-        // Prepend the storage path to the profile picture URL
+        // Retrieve all roles in the debate hierarchy
+        $roles = DebateRole::where('root_id', $rootDebate->id)->with('user')->get();
+
+        // Extract unique users
+        $participants = $roles->pluck('user')->unique('id');
+
+        // Prepend the storage path to the profile picture URL and attach roles
         foreach ($participants as $participant) {
-            $participant->profile_picture_url = asset('storage/' . $participant->profile_picture);
+            $participant->profile_picture_url = asset( $participant->profile_picture);
     
             // Attach roles related to the specific debate
-            $participant->roles_for_debate = $participant->roles($rootDebate->id)->get();
+            $participant->roles_for_debate = $roles->where('user_id', $participant->id);
         }
     
         return $participants;
@@ -745,6 +748,12 @@ class DebateController extends Controller
 
         $debate->increment('total_votes');
 
+        // Find the root debate ID
+        $rootId = $this->findRootId($debateId);
+    
+        // Check and assign role
+        $this->checkAndAssignRole(Auth::id(), $rootId, 'suggester');
+    
         return redirect()->back()->with('success', 'Your vote has been submitted.');
     }
 
@@ -892,6 +901,13 @@ class DebateController extends Controller
                 'user_id' => $userId,
                 'debate_id' => $request->debate_id,
             ]);
+
+        // Find the root debate ID
+        $rootId = $this->findRootId($request->debate_id);
+    
+        // Check and assign role
+        $this->checkAndAssignRole(Auth::id(), $rootId, 'viewer');
+
             return response()->json(['isBookmarked' => true, 'message' => 'Debate bookmarked successfully!']);
         }
     }
@@ -973,5 +989,40 @@ class DebateController extends Controller
         return response()->json(['success' => true]);
     }
 
-    
+    protected function checkAndAssignRole($userId, $rootId, $newRole)
+    {
+        $rolesHierarchy = [
+            'owner' => 1,
+            'admin' => 2,
+            'editor' => 3,
+            'writer' => 4,
+            'suggester' => 5,
+            'viewer' => 6,
+        ];
+
+        // Fetch existing role of the user in the debate hierarchy
+        $existingRole = DebateRole::where('user_id', $userId)
+            ->where('root_id', $rootId)
+            ->first();
+
+        // Check if the user already has a role and its position in the hierarchy
+        if ($existingRole) {
+            $existingRoleLevel = $rolesHierarchy[$existingRole->role];
+            $newRoleLevel = $rolesHierarchy[$newRole];
+
+            // Assign the new role only if it is higher in the hierarchy
+            if ($newRoleLevel < $existingRoleLevel) {
+                $existingRole->role = $newRole;
+                $existingRole->save();
+            }
+        } else {
+            // If the user doesn't have any role, assign the new role
+            DebateRole::create([
+                'user_id' => $userId,
+                'root_id' => $rootId,
+                'role' => $newRole,
+            ]);
+        }
+    }
+
 }
