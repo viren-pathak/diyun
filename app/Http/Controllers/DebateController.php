@@ -10,6 +10,7 @@ use App\Models\Vote;
 use App\Models\DebateRole;
 use App\Models\DebateBookmark;
 use App\Models\DebateInviteLink;
+use App\Models\Thanks;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -1024,5 +1025,70 @@ class DebateController extends Controller
             ]);
         }
     }
+
+
+    public function storeThanks(Request $request)
+    {
+        $request->validate([
+            'activity_id' => 'required|integer',
+            'activity_type' => 'required|string|in:debate,comment',
+        ]);
+    
+        $thankedOn = $request->activity_type;
+    
+        if ($thankedOn === 'debate') {
+            $activity = Debate::findOrFail($request->activity_id);
+        } else if ($thankedOn === 'comment') {
+            $activity = DebateComment::findOrFail($request->activity_id);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Invalid activity type.']);
+        }
+    
+        // Check if the user is trying to thank themselves
+        if ($activity->user_id == Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'You cannot thank yourself.']);
+        }
+    
+        $alreadyThanked = Thanks::where('thanked_by_user_id', Auth::id())
+            ->where('thanked_activity_id', $request->activity_id)
+            ->where('thanked_on', $thankedOn)
+            ->exists();
+    
+        if ($alreadyThanked) {
+            return response()->json(['success' => false, 'message' => 'You have already thanked this ' . $thankedOn . '.', 'thanked' => true]);
+        }
+    
+        Thanks::create([
+            'thanked_by_user_id' => Auth::id(),
+            'thanked_on' => $thankedOn,
+            'thanked_activity_id' => $request->activity_id,
+            'thanked_to_user_id' => $activity->user_id,
+        ]);
+    
+        return response()->json(['success' => true, 'thanked' => true]);
+    }
+
+
+
+    public function checkThanksStatus($type, $id)
+    {
+        $thankedOn = $type;
+
+        if ($thankedOn === 'debate') {
+            $activity = Debate::findOrFail($id);
+        } else if ($thankedOn === 'comment') {
+            $activity = DebateComment::findOrFail($id);
+        } else {
+            return response()->json(['thanked' => false]);
+        }
+
+        $alreadyThanked = Thanks::where('thanked_by_user_id', Auth::id())
+            ->where('thanked_activity_id', $id)
+            ->where('thanked_on', $thankedOn)
+            ->exists();
+
+        return response()->json(['thanked' => $alreadyThanked]);
+    }
+
 
 }

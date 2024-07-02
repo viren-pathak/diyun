@@ -63,6 +63,14 @@
                                             <x-progress-bar :value="$averageVotes['ancestors'][$ancestor->id]" />
                                             <button class="votes-btn" data-target="votesContainerAncestor{{ $ancestor->id }}">Votes</button>
                                         </div>
+                                        @if(auth()->check())
+                                            <div class="thanks-btn-container">
+                                                <button class="thanks-btn">
+                                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        @endif
+                                        </div>
                                         <div class="control-item-btn-container">
                                             <button class="control-item-btn">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
@@ -112,6 +120,13 @@
                                                                 <span class="comment-edited">Edited</span>
                                                             @endif
                                                             <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
+                                                            @if(auth()->check())
+                                                                <div class="thanks-btn-container">
+                                                                    <button class="thanks-btn">
+                                                                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
+                                                            @endif
                                                             @if(auth()->check() && auth()->user()->id === $comment->user_id)
                                                                 <button class="comment-menu">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
@@ -177,6 +192,13 @@
                                         <x-progress-bar :value="$averageVotes['debate']" />
                                         <button class="votes-btn" data-target="votesContainer{{ $debate->id }}">Votes</button>
                                     </div>
+                                    @if(auth()->check())
+                                        <div class="thanks-btn-container">
+                                            <button class="thanks-btn">
+                                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    @endif
                                     <div class="control-item-btn-container">
                                         <button class="control-item-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
@@ -225,6 +247,13 @@
                                                             <span class="comment-edited">Edited</span>
                                                         @endif
                                                         <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
+                                                        @if(auth()->check())
+                                                            <div class="thanks-btn-container">
+                                                                <button class="thanks-btn">
+                                                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                                </button>
+                                                            </div>
+                                                        @endif
                                                         @if(auth()->check() && auth()->user()->id === $comment->user_id)
                                                             <button class="comment-menu">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
@@ -319,6 +348,13 @@
                                                                 <x-progress-bar :value="$averageVotes['pros'][$pro->id]" />
                                                                 <button class="votes-btn" data-target="votesContainerPro{{ $pro->id }}">Votes</button>
                                                             </div>
+                                                            @if(auth()->check())
+                                                                <div class="thanks-btn-container">
+                                                                    <button class="thanks-btn">
+                                                                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
+                                                            @endif
                                                             <div class="control-item-btn-container">
                                                                 <button class="control-item-btn">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
@@ -367,6 +403,13 @@
                                                                                     <span class="comment-edited">Edited</span>
                                                                                 @endif
                                                                                 <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
+                                                                                @if(auth()->check())
+                                                                                    <div class="thanks-btn-container">
+                                                                                        <button class="thanks-btn">
+                                                                                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                @endif
                                                                                 @if(auth()->check() && auth()->user()->id === $comment->user_id)
                                                                                     <button class="comment-menu">
                                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
@@ -446,6 +489,13 @@
                                                                 <x-progress-bar :value="$averageVotes['cons'][$con->id]" />
                                                                 <button class="votes-btn" data-target="votesContainerCon{{ $con->id }}">Votes</button>
                                                             </div>
+                                                            @if(auth()->check())
+                                                                <div class="thanks-btn-container">
+                                                                    <button class="thanks-btn">
+                                                                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
+                                                            @endif
                                                             <div class="control-item-btn-container">
                                                                 <button class="control-item-btn">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
@@ -494,6 +544,13 @@
                                                                                     <span class="comment-edited">Edited</span>
                                                                                 @endif
                                                                                 <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
+                                                                                @if(auth()->check())
+                                                                                    <div class="thanks-btn-container">
+                                                                                        <button class="thanks-btn">
+                                                                                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                @endif
                                                                                 @if(auth()->check() && auth()->user()->id === $comment->user_id)
                                                                                     <button class="comment-menu">
                                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
@@ -1320,6 +1377,86 @@
             window.location.href = mailtoLink;
         }
     });
+
+
+    /////// #####  THANKS FUNCTIONALITY
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.thanks-btn').forEach(button => {
+            // Check if the user has already thanked the activity on page load
+            let claimCard = button.closest('.claim-card') || button.closest('.comment-box');
+            if (claimCard) {
+                let activityId, activityType;
+                if (claimCard.classList.contains('claim-card')) {
+                    activityId = claimCard.getAttribute('data-debate-id');
+                    activityType = 'debate';
+                } else if (claimCard.classList.contains('comment-box')) {
+                    activityId = claimCard.getAttribute('data-comment-id');
+                    activityType = 'comment';
+                }
+
+                fetch(`{{ url('/thanks/status') }}/${activityType}/${activityId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.thanked) {
+                        button.classList.add('thanked');
+                        button.querySelector('i').classList.remove('fa-heart-o');
+                        button.querySelector('i').classList.add('fa-heart');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            // Handle the thank button click
+            button.addEventListener('click', function() {
+                let claimCard = this.closest('.claim-card') || this.closest('.comment-box');
+                if (claimCard) {
+                    let activityId, activityType;
+                    if (claimCard.classList.contains('claim-card')) {
+                        activityId = claimCard.getAttribute('data-debate-id');
+                        activityType = 'debate';
+                    } else if (claimCard.classList.contains('comment-box')) {
+                        activityId = claimCard.getAttribute('data-comment-id');
+                        activityType = 'comment';
+                    }
+
+                    fetch('{{ route("thanks.store") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            activity_id: activityId,
+                            activity_type: activityType
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.classList.add('thanked');
+                            this.querySelector('i').classList.remove('fa-heart-o');
+                            this.querySelector('i').classList.add('fa-heart');
+                        } else {
+                            // Optionally, handle the case where the user has already thanked
+                            console.warn(data.message || 'Error thanking the user.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                } else {
+                    console.error('Error: Unable to find the activity ID.');
+                }
+            });
+        });
+    });
+
+
 
 </script>
 

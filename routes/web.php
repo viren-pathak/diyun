@@ -76,6 +76,9 @@ Route::delete('/debate/{debateId}/vote', [DebateController::class, 'deleteVote']
 
 Route::post('/debate/sendInvite', [DebateController::class, 'sendInvite'])->name('debate.sendInvite');
 
+Route::post('/thanks', [DebateController::class, 'storeThanks'])->name('thanks.store');
+Route::get('/thanks/status/{type}/{id}', [DebateController::class, 'checkThanksStatus'])->name('thanks.status');
+
 /***** ROUTES FOR static PAGES *****/
 
 Route::get('/about', [Basecontroller::class, 'about'])->name('about.page');

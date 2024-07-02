@@ -1045,6 +1045,10 @@ button.btn-danger.btn.add-cons-btn {
   border:1px solid #198754;
 }
 
+.claim-header {
+  display: flex;
+}
+
   /*----------------------------------------------
   --------------- DEBATE SETTING PAGE ----------------
   ----------------------------------------------*/
