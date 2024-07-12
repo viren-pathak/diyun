@@ -26,24 +26,9 @@
         @include('debate.header')
         <main class="single-page-container">
             @include('sidebar.menu')
+            @include('notification.main')
+            @include('notification.chat')
             @yield('content')
         </main>
-
-        <script>
-            $(document).ready(function() {
-                $('.single-page-menu').click(function() {
-                    $('#sidebar-menu').toggleClass('active');
-                    $('.debate-single-content').toggleClass('sidebar-active');
-                });
-                
-                $('.single-sidebar-menu__close').click(function() {
-                    $('#sidebar-menu').removeClass('active');
-                    $('.debate-single-content').removeClass('sidebar-active');
-                    $('.single-sidebar-menu__item-myClaims').removeClass('active');
-                    $('.single-sidebar-menu__item-myContri').removeClass('active');
-                });
-            });
-        </script>
-  
     </body>
 </html>

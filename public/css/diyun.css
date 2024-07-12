@@ -730,6 +730,7 @@ p.topbar-debate-title {
   transition: left 0.3s;
   padding: 20px;
   z-index: 1000;
+  overflow-x: scroll;
 }
 
 .sidebar-menu.active {
@@ -762,7 +763,12 @@ p.topbar-debate-title {
 
 .single-sidebar-menu__item-myClaims,
 .single-sidebar-menu__item-myContri,
-.single-sidebar-menu__item-myBookmarks{
+.single-sidebar-menu__item-myBookmarks,
+.single-sidebar-menu__item-search,
+.single-sidebar-menu__item-sources,
+.single-sidebar-menu__item-perspectives,
+.single-sidebar-menu__item-mySugClaims,
+.single-sidebar-menu__item-mySugComments{
   position: absolute;
   left: -250px; /* Hidden by default */
   width: 250px;
@@ -777,10 +783,39 @@ p.topbar-debate-title {
 
 .single-sidebar-menu__item-myClaims.active,
 .single-sidebar-menu__item-myContri.active,
-.single-sidebar-menu__item-myBookmarks.active {
+.single-sidebar-menu__item-myBookmarks.active,
+.single-sidebar-menu__item-search.active,
+.single-sidebar-menu__item-sources.active,
+.single-sidebar-menu__item-perspectives.active,
+.single-sidebar-menu__item-mySugClaims.active,
+.single-sidebar-menu__item-mySugComments.active {
   left: 0;
 }
 
+
+/**** NOTIFICATIONS SIDEBAR *****/
+.notification-menu.active,
+.chats-cont.active {
+  left: 0; /* Show the sidebar */
+}
+
+.notification-menu,
+.chats-cont {
+  position: fixed;
+  left: -250px; /* Hidden by default */
+  width: 250px;
+  height: 100%;
+  background-color: #fff;
+  color: black;
+  transition: left 0.3s;
+  padding: 20px;
+  z-index: 1000;
+}
+
+div#sidebar-chats {
+  overflow-x: scroll;
+  padding-bottom: 100px;
+}
 
 /* MAIN BODY */
 

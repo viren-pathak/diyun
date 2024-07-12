@@ -22,7 +22,7 @@
             <div class="sidebar-menu-link-container">
                 <ul class="sidebar-menu-link-list">
 
-                    <li class="sidebar-menu-item">
+                    <li class="sidebar-menu-link sidebar-menu-link-myDiyun">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
@@ -34,7 +34,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item">
+                    <li class="sidebar-menu-link sidebar-menu-link-sharing">
                         <a class="menu-link" href="{{ route('settings', ['slug' => $rootDebate->slug, 'tab' => 'sharing']) }}">
                             <span class="icon-svg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-gear" viewBox="0 0 16 16">
@@ -45,7 +45,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item">
+                    <li class="sidebar-menu-link sidebar-menu-link-settings">
                         <a class="menu-link" href="{{ route('settings', ['slug' => $rootDebate->slug, 'tab' => 'general']) }}">
                             <span class="icon-svg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
@@ -56,7 +56,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item">
+                    <li class="sidebar-menu-link sidebar-menu-link-search">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -67,7 +67,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item">
+                    <li class="sidebar-menu-link sidebar-menu-link-infoStats">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -78,7 +78,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item">
+                    <li class="sidebar-menu-link sidebar-menu-link-sources">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
@@ -90,15 +90,19 @@
                         </a>
                     </li>
 
-                    <li class="menu-divider">
-                        <div class="sidebar-menu-divider"></div>
-                    </li>
-
-                    <li class="sidebar-menu-item menu-item-without-svg">
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-perspectives">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                             </span>
-                            Request Rights
+                            Perspectives
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-guidedVoting">
+                        <a class="menu-link" href="#">
+                            <span class="icon-svg">
+                            </span>
+                            Guided Voting
                         </a>
                     </li>
 
@@ -107,7 +111,29 @@
                     </li>
 
                     @auth
-                    <li class="sidebar-menu-item menu-item-without-svg sidebar-menu-item-myClaims">
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-requestWriter">
+                        <a class="menu-link" href="#">
+                            <span class="icon-svg">
+                            </span>
+                            Request Writer Rights
+                        </a>
+                    </li>
+                    @else
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-request"  onclick="openLoginForm()">
+                        <a class="menu-link" href="#">
+                            <span class="icon-svg">
+                            </span>
+                            Request Writer Rights
+                        </a>
+                    </li>
+                    @endauth
+
+                    <li class="menu-divider">
+                        <div class="sidebar-menu-divider"></div>
+                    </li>
+
+                    @auth
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-myClaims">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                             </span>
@@ -115,7 +141,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item menu-item-without-svg sidebar-menu-item-myContri">
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-myContri">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                             </span>
@@ -123,7 +149,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item menu-item-without-svg sidebar-menu-item-myBookmark">
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-myBookmark">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                             </span>
@@ -131,7 +157,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item menu-item-without-svg">
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-mySugClaims">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                             </span>
@@ -139,7 +165,7 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-menu-item menu-item-without-svg">
+                    <li class="sidebar-menu-link menu-item-without-svg sidebar-menu-link-mySugComments">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                             </span>
@@ -152,7 +178,7 @@
                     </li>
                     @endauth
 
-                    <li class="sidebar-menu-item">
+                    <li class="sidebar-menu-link sidebar-menu-link-help">
                         <a class="menu-link" href="#">
                             <span class="icon-svg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-lg" viewBox="0 0 16 16">
@@ -169,27 +195,43 @@
 
         {{-- #### sidebar menu content #### --}}
         <div class="single-sidebar-menu__items">
+                <div class="single-sidebar-menu__item-search sidebar-menu__item">
+                        @include('sidebar.search')
+                </div>
+
+                <div class="single-sidebar-menu__item-sources sidebar-menu__item">
+                        @include('sidebar.sources')
+                </div>
+
+                <div class="single-sidebar-menu__item-perspectives sidebar-menu__item">
+                        @include('sidebar.perspectives')
+                </div>
             @auth
-                <div class="single-sidebar-menu__item-myClaims">
+                <div class="single-sidebar-menu__item-myClaims sidebar-menu__item">
                     @isset($myClaims)
                         @include('sidebar.myClaims')
                     @endisset
                 </div>
 
-                <div class="single-sidebar-menu__item-myContri">
+                <div class="single-sidebar-menu__item-myContri sidebar-menu__item">
                     @isset($myContributions)
                         @include('sidebar.myContributions')
                     @endisset
                 </div>
 
-                <div class="single-sidebar-menu__item-myBookmarks">
+                <div class="single-sidebar-menu__item-myBookmarks sidebar-menu__item">
                     @isset($bookmarkedDebates)
                         @include('sidebar.myBookmarks')
                     @endisset
                 </div>
 
-                <div class="single-sidebar-menu__item-mySugClaims"></div>
-                <div class="single-sidebar-menu__item-mySugCom"></div>
+                <div class="single-sidebar-menu__item-mySugClaims sidebar-menu__item">
+                    @include('sidebar.mySugClaims')
+                </div>
+
+                <div class="single-sidebar-menu__item-mySugComments sidebar-menu__item">
+                    @include('sidebar.mySugComments')
+                </div>
             @endauth
         </div>
     </aside>    
@@ -198,28 +240,137 @@
 <script>
     $(document).ready(function() {
 
+        // TOGGLE SIDEBAR MENU ON CLICK OF BUTTON IN HEADER
+        $('.single-page-menu').click(function() {
+            $('#sidebar-menu').toggleClass('active');
+            $('.debate-single-content').toggleClass('sidebar-active');
+        });
+                
+        // CLOSE SIDEBAR WHEN CLICKED ON CLOSE BUTTON
+        $('.single-sidebar-menu__close').click(function() {
+            $('#sidebar-menu').removeClass('active');
+            $('.debate-single-content').removeClass('sidebar-active');
+            $('.sidebar-menu__item').removeClass('active');
+        });
+
+        // GET BACK TO MAIN MENU WHEN CLICKED BACK BUTTON
+        $('.single-sidebar-menu__item-back').click(function() {
+            $('.sidebar-menu__item').removeClass('active');
+        });
+
+
         // MY CLAIMS DIV OPEN CLOSE
-        $('.sidebar-menu-item-myClaims').click(function() {
+        $('.sidebar-menu-link-myClaims').click(function() {
             $('.single-sidebar-menu__item-myClaims').toggleClass('active');
         });
 
-        $('.single-sidebar-menu__item-back').click(function() {
-            $('.single-sidebar-menu__item-myClaims').removeClass('active');
-            $('.single-sidebar-menu__item-myContri').removeClass('active');
-            $('.single-sidebar-menu__item-myBookmarks').removeClass('active');
-        });
-
-
         // MY CONTRIBUTIONS DIV OPEN CLOSE
 
-        $('.sidebar-menu-item-myContri').click(function() {
+        $('.sidebar-menu-link-myContri').click(function() {
             $('.single-sidebar-menu__item-myContri').toggleClass('active');
         });
 
         // MY BOOKMARKS DIV OPEN CLOSE
 
-        $('.sidebar-menu-item-myBookmark').click(function() {
+        $('.sidebar-menu-link-myBookmark').click(function() {
             $('.single-sidebar-menu__item-myBookmarks').toggleClass('active');
         });
 
-    });</script>
+        // SEARCH DIV OPEN CLOSE
+        $('.sidebar-menu-link-search').click(function() {
+            $('.single-sidebar-menu__item-search').toggleClass('active');
+        });
+
+        // SOURCES DIV OPEN CLOSE
+        $('.sidebar-menu-link-sources').click(function() {
+            $('.single-sidebar-menu__item-sources').toggleClass('active');
+        });
+
+        // PERSPECTIVES DIV OPEN CLOSE
+        $('.sidebar-menu-link-perspectives').click(function() {
+            $('.single-sidebar-menu__item-perspectives').toggleClass('active');
+        });
+
+        // MY SUGGESTED CLAIMS DIV OPEN CLOSE
+        $('.sidebar-menu-link-mySugClaims').click(function() {
+            $('.single-sidebar-menu__item-mySugClaims').toggleClass('active');
+        });
+
+        // MY SUGGESTED CLAIMS DIV OPEN CLOSE
+        $('.sidebar-menu-link-mySugComments').click(function() {
+            $('.single-sidebar-menu__item-mySugComments').toggleClass('active');
+        });
+    });
+
+        
+    document.addEventListener('DOMContentLoaded', function() {
+
+        document.querySelectorAll('.sidebar-menu-link-requestWriter').forEach(container => {
+            container.addEventListener('click', function(event) {
+                event.stopPropagation();
+                openRightsForm(); 
+            });
+        });
+
+        // Function to open the FORM fot requesting writer rights
+        function openRightsForm(container) {
+            // Create the control modal HTML
+            const openRightsFormHtml = `
+                <div class="rights-form-modal">
+                    <div class="modal-content">
+                        <span class="close close-rights-modal">&times;</span>
+                        <h2 class="right-form-heading">Request Writer rights</h2>
+                        <p>Tip: Admins are much more likely to grant Writer rights to users who have already suggested a few claims.</p>
+                        <div class="modal-form-cont">
+                            <b>Message:</b>
+                            <input class="right-form-input" type="text" placeholder="Please explain why you want to join the discussion.">
+                            <p class="rights-form-limit">1024</p>
+                            <div class="modal-btn-cont">
+                                <button class="close-rights-modal">Cancel</button>
+                                <button class="close-rights-modal submit-rights-modal">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                .rights-form-modal {
+                    position: fixed;
+                    z-index: 999999;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgba(0,0,0,0.4);
+                }
+                </style>
+            `;
+
+            // Append modal HTML to body
+            document.body.insertAdjacentHTML('beforeend', openRightsFormHtml);
+
+            // Add event listener for clicking outside the modal content
+            document.querySelector('.rights-form-modal').addEventListener('click', function(event) {
+                if (event.target === this) {
+                    closeRightsForm();
+                }
+            });
+
+                    // Add event listeners to the modal buttons
+            document.querySelectorAll('.close-rights-modal').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    closeRightsForm();
+                });
+            });
+
+        }
+
+        // Function to close the FORM fot requesting writer rights
+        function closeRightsForm() {
+            const modal = document.querySelector('.rights-form-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+    });
+</script>
