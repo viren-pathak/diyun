@@ -70,7 +70,6 @@
                                                 </button>
                                             </div>
                                         @endif
-                                        </div>
                                         <div class="control-item-btn-container">
                                             <button class="control-item-btn">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
@@ -99,83 +98,9 @@
                                     </div>
                                 </div>
                                 
-                                <div class="comment-form-container" style="display:none;">
-                                    <div class="comment-container__header">
-                                        <button type="button" class="close-form-btn close-comment-container">&#10005;</button>
-                                    </div>
-                                    <div class="comment-container__content">
-                                        <ul class="comments-list">
-                                            @foreach($ancestor->comments as $comment)
-                                                <li class="comment-box" data-comment-id="{{ $comment->id }}">
-                                                    <div class="comment-identity-avatar">
-                                                        <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
-                                                    </div>
-                                                    <div class="comment-box-body">
-                                                        <div class="comment-box-content">
-                                                            <p class="comment-content__text">{{ $comment->comment }}</p>
-                                                        </div>
-                                                        <div class="comment-meta-details">
-                                                            <span class="comment-username">{{ $comment->user->username }}</span>
-                                                            @if ($comment->created_at != $comment->updated_at)
-                                                                <span class="comment-edited">Edited</span>
-                                                            @endif
-                                                            <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
-                                                            @if(auth()->check())
-                                                                <div class="thanks-btn-container">
-                                                                    <button class="thanks-btn">
-                                                                        <i class="fa fa-heart-o" aria-hidden="true"></i>
-                                                                    </button>
-                                                                </div>
-                                                            @endif
-                                                            @if(auth()->check() && auth()->user()->id === $comment->user_id)
-                                                                <button class="comment-menu">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                                                                    </svg>
-                                                                </button>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                    <div class="new-comment-editor">
-                                        @if (auth()->check())
-                                        <form action="{{ route('debate.comment', $ancestor->id) }}" method="POST" class="comment-form">
-                                            @csrf
-                                            <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
-                                            <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>
-                                        </form>
-                                        @else
-                                            <button class="comment-login-btn" onclick="openLoginForm()">Please log in to write comments</button>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div id="votesContainerAncestor{{ $ancestor->id }}" class="votes-drafts-container" style="display:none;">
-                                    @if($ancestor->userVoted())
-                                        <form action="{{ route('debate.deleteVote', $ancestor->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">&#8634;</button>
-                                        </form>
-                                    @endif
+                                @include('debate.ancestors-comment')
 
-                                    <canvas id="votesChartAncestor{{ $ancestor->id }}" width="200" height="40"></canvas>
-
-                                    @if ($ancestor->voting_allowed)
-                                        <form action="{{ route('debate.vote', $ancestor->id) }}" method="POST">
-                                            @csrf
-                                            <div class="vote-buttons">
-                                                @for ($i = 0; $i <= 4; $i++)
-                                                    <button type="submit" name="rating" value="{{ $i }}">{{ $i }}</button>
-                                                @endfor
-                                            </div>
-                                        </form>
-                                    @else
-                                        <p>Enable voting for this debate to allow voting.</p>
-                                    @endif
-                                </div>
+                                @include('debate.ancestors-vote')
                             </div>
                         @endforeach
                     </div>
@@ -226,83 +151,9 @@
                                     <p class="claim-text__content" data-debate-id="{{ $debate->id }}">{{ $debate->title }}</p>
                                 </div>
                             </div>
-                            <div class="comment-form-container" style="display:none;">
-                                <div class="comment-container__header">
-                                    <button type="button" class="close-form-btn close-comment-container">&#10005;</button>
-                                </div>
-                                <div class="comment-container__content">
-                                    <ul class="comments-list">
-                                        @foreach($debate->comments as $comment)
-                                            <li class="comment-box" data-comment-id="{{ $comment->id }}">
-                                                <div class="comment-identity-avatar">
-                                                    <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
-                                                </div>
-                                                <div class="comment-box-body">
-                                                    <div class="comment-box-content">
-                                                        <p class="comment-content__text">{{ $comment->comment }}</p>
-                                                    </div>
-                                                    <div class="comment-meta-details">
-                                                        <span class="comment-username">{{ $comment->user->username }}</span>
-                                                        @if ($comment->created_at != $comment->updated_at)
-                                                            <span class="comment-edited">Edited</span>
-                                                        @endif
-                                                        <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
-                                                        @if(auth()->check())
-                                                            <div class="thanks-btn-container">
-                                                                <button class="thanks-btn">
-                                                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
-                                                                </button>
-                                                            </div>
-                                                        @endif
-                                                        @if(auth()->check() && auth()->user()->id === $comment->user_id)
-                                                            <button class="comment-menu">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                                                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                                                                </svg>
-                                                            </button>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                                <div class="new-comment-editor">
-                                    @if (auth()->check())
-                                    <form action="{{ route('debate.comment', $debate->id) }}" method="POST" class="comment-form">
-                                        @csrf
-                                        <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
-                                        <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>
-                                    </form>
-                                    @else
-                                        <button class="comment-login-btn" onclick="openLoginForm()">Please log in to write comments</button>
-                                    @endif
-                                </div>
-                            </div>
-                            <div id="votesContainer{{ $debate->id }}" class="votes-drafts-container" style="display:none;">
-                                @if($debate->userVoted())
-                                    <form action="{{ route('debate.deleteVote', $debate->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">&#8634;</button>
-                                    </form>
-                                @endif
+                            @include('debate.selected-comment')
 
-                                <canvas id="votesChart" width="200" height="40"></canvas>
-
-                                @if ($debate->voting_allowed)
-                                    <form action="{{ route('debate.vote', $debate->id) }}" method="POST">
-                                        @csrf
-                                        <div class="vote-buttons">
-                                            @for ($i = 0; $i <= 4; $i++)
-                                                <button type="submit" name="rating" value="{{ $i }}">{{ $i }}</button>
-                                            @endfor
-                                        </div>
-                                    </form>
-                                @else
-                                    <p>Enable voting for this debate to allow voting.</p>
-                                @endif
-                            </div>
+                            @include('debate.selected-vote')
 
                         </div>
                     </div>
@@ -382,83 +233,9 @@
                                                             <p class="claim-text__content" data-debate-id="{{ $pro->id }}">{{ $pro->title }}</p>
                                                         </div>
                                                     </div>
-                                                    <div class="comment-form-container" style="display:none;">
-                                                        <div class="comment-container__header">
-                                                            <button type="button" class="close-form-btn close-comment-container">&#10005;</button>
-                                                        </div>
-                                                        <div class="comment-container__content">
-                                                            <ul class="comments-list">
-                                                                @foreach($pro->comments as $comment)
-                                                                    <li class="comment-box" data-comment-id="{{ $comment->id }}">
-                                                                        <div class="comment-identity-avatar">
-                                                                            <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
-                                                                        </div>
-                                                                        <div class="comment-box-body">
-                                                                            <div class="comment-box-content">
-                                                                                <p class="comment-content__text">{{ $comment->comment }}</p>
-                                                                            </div>
-                                                                            <div class="comment-meta-details">
-                                                                                <span class="comment-username">{{ $comment->user->username }}</span>
-                                                                                @if ($comment->created_at != $comment->updated_at)
-                                                                                    <span class="comment-edited">Edited</span>
-                                                                                @endif
-                                                                                <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
-                                                                                @if(auth()->check())
-                                                                                    <div class="thanks-btn-container">
-                                                                                        <button class="thanks-btn">
-                                                                                            <i class="fa fa-heart-o" aria-hidden="true"></i>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                @endif
-                                                                                @if(auth()->check() && auth()->user()->id === $comment->user_id)
-                                                                                    <button class="comment-menu">
-                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                                                                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                                                                                        </svg>
-                                                                                    </button>
-                                                                                @endif
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                        <div class="new-comment-editor">
-                                                            @if (auth()->check())
-                                                            <form action="{{ route('debate.comment', $pro->id) }}" method="POST" class="comment-form">
-                                                                @csrf
-                                                                <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
-                                                                <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>
-                                                            </form>
-                                                            @else
-                                                                <button class="comment-login-btn" onclick="openLoginForm()">Please log in to write comments</button>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div id="votesContainerPro{{ $pro->id }}" class="votes-drafts-container" style="display:none;">
-                                                        @if($pro->userVoted())
-                                                            <form action="{{ route('debate.deleteVote', $pro->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger">&#8634;</button>
-                                                            </form>
-                                                        @endif
-
-                                                        <canvas id="votesChartPro{{ $pro->id }}" width="200" height="40"></canvas>
-
-                                                        @if ($pro->voting_allowed)
-                                                            <form action="{{ route('debate.vote', $pro->id) }}" method="POST">
-                                                                @csrf
-                                                                <div class="vote-buttons">
-                                                                    @for ($i = 0; $i <= 4; $i++)
-                                                                        <button type="submit" name="rating" value="{{ $i }}">{{ $i }}</button>
-                                                                    @endfor
-                                                                </div>
-                                                            </form>
-                                                        @else
-                                                            <p>Enable voting for this debate to allow voting.</p>
-                                                        @endif
-                                                    </div>
+                                                    @include('debate.pros-comment')
+                                                    
+                                                    @include('debate.pros-vote')
                                                 </div>
                                             </div>
                                         </li>
@@ -523,83 +300,9 @@
                                                             <p class="claim-text__content" data-debate-id="{{ $con->id }}">{{ $con->title }}</p>
                                                         </div>
                                                     </div>
-                                                    <div class="comment-form-container" style="display:none;">
-                                                        <div class="comment-container__header">
-                                                            <button type="button" class="close-form-btn close-comment-container">&#10005;</button>
-                                                        </div>
-                                                        <div class="comment-container__content">
-                                                            <ul class="comments-list">
-                                                                @foreach($con->comments as $comment)
-                                                                    <li class="comment-box" data-comment-id="{{ $comment->id }}">
-                                                                        <div class="comment-identity-avatar">
-                                                                            <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
-                                                                        </div>
-                                                                        <div class="comment-box-body">
-                                                                            <div class="comment-box-content">
-                                                                                <p class="comment-content__text">{{ $comment->comment }}</p>
-                                                                            </div>
-                                                                            <div class="comment-meta-details">
-                                                                                <span class="comment-username">{{ $comment->user->username }}</span>
-                                                                                @if ($comment->created_at != $comment->updated_at)
-                                                                                    <span class="comment-edited">Edited</span>
-                                                                                @endif
-                                                                                <span class="comment-time">{{ $comment->updated_at->diffForHumans() }}</span>
-                                                                                @if(auth()->check())
-                                                                                    <div class="thanks-btn-container">
-                                                                                        <button class="thanks-btn">
-                                                                                            <i class="fa fa-heart-o" aria-hidden="true"></i>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                @endif
-                                                                                @if(auth()->check() && auth()->user()->id === $comment->user_id)
-                                                                                    <button class="comment-menu">
-                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                                                                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                                                                                        </svg>
-                                                                                    </button>
-                                                                                @endif
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                        <div class="new-comment-editor">
-                                                            @if (auth()->check())
-                                                            <form action="{{ route('debate.comment', $con->id) }}" method="POST" class="comment-form">
-                                                                @csrf
-                                                                <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
-                                                                <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>
-                                                            </form>
-                                                            @else
-                                                                <button class="comment-login-btn" onclick="openLoginForm()">Please log in to write comments</button>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div id="votesContainerCon{{ $con->id }}" class="votes-drafts-container" style="display:none;">
-                                                        @if($con->userVoted())
-                                                            <form action="{{ route('debate.deleteVote', $con->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger">&#8634;</button>
-                                                            </form>
-                                                        @endif
+                                                    @include('debate.cons-comment')
 
-                                                        <canvas id="votesChartCon{{ $con->id }}" width="200" height="40"></canvas>
-                                                        
-                                                        @if ($con->voting_allowed)
-                                                            <form action="{{ route('debate.vote', $con->id) }}" method="POST">
-                                                                @csrf
-                                                                <div class="vote-buttons">
-                                                                    @for ($i = 0; $i <= 4; $i++)
-                                                                        <button type="submit" name="rating" value="{{ $i }}">{{ $i }}</button>
-                                                                    @endfor
-                                                                </div>
-                                                            </form>
-                                                        @else
-                                                            <p>Enable voting for this debate to allow voting.</p>
-                                                        @endif
-                                                    </div>
+                                                    @include('debate.cons-vote')
                                                 </div>
                                             </div>
                                         </li>
@@ -775,6 +478,21 @@
                     }]
                 },
                 options: {
+                    plugins: {
+                        datalabels: {
+                            color: '#000',
+                            anchor: 'end',
+                            align: 'end',
+                            offset: -5,
+                            font: {
+                                weight: 'bold',
+                                size: 14,
+                            },
+                            formatter: function(value, context) {
+                                return '';  // Do not return the value here
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             display: true,
@@ -783,7 +501,37 @@
                             display: false,
                         }
                     }
-                }
+                },
+                plugins: [ChartDataLabels, {
+                    afterDatasetsDraw: function(chart, easing) {
+                        var ctx = chart.ctx;
+
+                        chart.data.datasets.forEach(function (dataset, i) {
+                            var meta = chart.getDatasetMeta(i);
+                            if (!meta.hidden) {
+                                meta.data.forEach(function (element, index) {
+                                    // Draw the icon
+                                    var fontSize = 14;
+                                    var fontStyle = 'normal';
+                                    var fontFamily = 'FontAwesome';
+                                    ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                    // Text anchor
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'middle';
+
+                                    var padding = -10;
+                                    var position = element.tooltipPosition();
+                                    ctx.fillText('\uf007', position.x - 6, position.y + padding);  // FontAwesome user icon with horizontal offset
+
+                                    // Draw the count
+                                    ctx.font = Chart.helpers.fontString(14, 'bold', 'Arial');
+                                    ctx.fillText(dataset.data[index], position.x + 5, position.y + padding);  // Count with horizontal offset
+                                });
+                            }
+                        });
+                    }
+                }]
             });
         }
 
