@@ -115,6 +115,15 @@ class DebateController extends Controller
         $pros = Debate::where('parent_id', $debate->id)->where('side', 'pro')->get();
         $cons = Debate::where('parent_id', $debate->id)->where('side', 'con')->get();
     
+        // Check if each pro and con has children
+        foreach ($pros as $pro) {
+            $pro->hasChildren = Debate::where('parent_id', $pro->id)->exists();
+        }
+    
+        foreach ($cons as $con) {
+            $con->hasChildren = Debate::where('parent_id', $con->id)->exists();
+        }
+    
         $activeDebateId = $request->query('active');
         
         // Retrieve comments for the debate
@@ -197,7 +206,12 @@ class DebateController extends Controller
         // Get the user's bookmarks in the current debate hierarchy
         $bookmarkedDebates = $this->getUserBookmarks($slug);
 
-        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData', 'bookmarkedDebates'));
+        // Function to get total votes count
+        $getTotalVotes = function ($debateId) {
+            return $this->getTotalVotes($debateId);
+        };
+
+        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData', 'bookmarkedDebates', 'getTotalVotes'));
     }
     
     
@@ -798,6 +812,12 @@ class DebateController extends Controller
         $average = $sum / $votes->count();
 
         return $average;
+    }
+
+    public function getTotalVotes($debateId)
+    {
+        // Get the total count of votes for the debate
+        return Vote::where('debate_id', $debateId)->count();
     }
 
     public function getMyClaims(Request $request, $slug)

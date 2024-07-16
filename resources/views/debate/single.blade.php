@@ -61,6 +61,18 @@
                                         <div class="votes-btn-container">
                                             {{-- PRGRESS BAR BLADE in views>components>progress-bar.blade.php --}}
                                             <x-progress-bar :value="$averageVotes['ancestors'][$ancestor->id]" />
+
+                                            {{-- Total Votes Progress Bar --}}
+                                            @php
+                                                $totalVotes = $getTotalVotes($ancestor->id);
+                                                $totalVotesValue = min($totalVotes * 10, 100);
+                                            @endphp
+                                            @if($totalVotes > 0)
+                                            <div class="total-votes-bar">
+                                                <div class="total-votes" style="width: {{ $totalVotesValue }}%;"></div>
+                                            </div>
+                                            @endif
+
                                             <button class="votes-btn" data-target="votesContainerAncestor{{ $ancestor->id }}">Votes</button>
                                         </div>
                                         @if(auth()->check())
@@ -115,6 +127,18 @@
                                     <div class="votes-btn-container">
                                         {{-- PRGRESS BAR BLADE in views>components>progress-bar.blade.php --}}
                                         <x-progress-bar :value="$averageVotes['debate']" />
+
+                                        {{-- Total Votes Progress Bar --}}
+                                        @php
+                                            $totalVotes = $getTotalVotes($debate->id);
+                                            $totalVotesValue = min($totalVotes * 10, 100);
+                                        @endphp
+                                        @if($totalVotes > 0)
+                                        <div class="total-votes-bar">
+                                            <div class="total-votes" style="width: {{ $totalVotesValue }}%;"></div>
+                                        </div>
+                                        @endif
+
                                         <button class="votes-btn" data-target="votesContainer{{ $debate->id }}">Votes</button>
                                     </div>
                                     @if(auth()->check())
@@ -197,6 +221,18 @@
                                                             <div class="votes-btn-container">
                                                                 {{-- PRGRESS BAR BLADE in views>components>progress-bar.blade.php --}}
                                                                 <x-progress-bar :value="$averageVotes['pros'][$pro->id]" />
+
+                                                                {{-- Total Votes Progress Bar --}}
+                                                                @php
+                                                                    $totalVotes = $getTotalVotes($pro->id);
+                                                                    $totalVotesValue = min($totalVotes * 10, 100);
+                                                                @endphp
+                                                                @if($totalVotes > 0)
+                                                                <div class="total-votes-bar">
+                                                                    <div class="total-votes" style="width: {{ $totalVotesValue }}%;"></div>
+                                                                </div>
+                                                                @endif
+
                                                                 <button class="votes-btn" data-target="votesContainerPro{{ $pro->id }}">Votes</button>
                                                             </div>
                                                             @if(auth()->check())
@@ -237,6 +273,12 @@
                                                     
                                                     @include('debate.pros-vote')
                                                 </div>
+                                                @if($pro->hasChildren)
+                                                    <div class="children-indicator">
+                                                        <div class="children-indicator__child"></div>
+                                                        <div class="children-indicator__shadow"></div>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </li>
                                     @endforeach
@@ -264,6 +306,18 @@
                                                             <div class="votes-btn-container">
                                                                 {{-- PRGRESS BAR BLADE in views>components>progress-bar.blade.php --}}
                                                                 <x-progress-bar :value="$averageVotes['cons'][$con->id]" />
+
+                                                                {{-- Total Votes Progress Bar --}}
+                                                                @php
+                                                                    $totalVotes = $getTotalVotes($con->id);
+                                                                    $totalVotesValue = min($totalVotes * 10, 100);
+                                                                @endphp
+                                                                @if($totalVotes > 0)
+                                                                <div class="total-votes-bar">
+                                                                    <div class="total-votes" style="width: {{ $totalVotesValue }}%;"></div>
+                                                                </div>
+                                                                @endif
+
                                                                 <button class="votes-btn" data-target="votesContainerCon{{ $con->id }}">Votes</button>
                                                             </div>
                                                             @if(auth()->check())
@@ -304,6 +358,12 @@
 
                                                     @include('debate.cons-vote')
                                                 </div>
+                                                @if($con->hasChildren)
+                                                    <div class="children-indicator">
+                                                        <div class="children-indicator__child"></div>
+                                                        <div class="children-indicator__shadow"></div>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </li>
                                     @endforeach
