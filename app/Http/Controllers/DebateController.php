@@ -1111,9 +1111,12 @@ class DebateController extends Controller
     }
 
 
-    public function loadDetailDrawer()
+    public function loadDetailDrawer(Request $request)
     {
-        return view('debate.dynamic-modal');
+        $debateId = $request->query('debate_id');
+        $debate = Debate::with('comments.user')->findOrFail($debateId);
+    
+        return view('debate.dynamic-modal', compact('debate'));
     }
 
 }

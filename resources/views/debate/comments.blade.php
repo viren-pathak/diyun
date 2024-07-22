@@ -1,11 +1,7 @@
-<div class="comment-form-container" style="display:none;">
-    <div class="comment-container__header">
-        <button type="button" class="close-form-btn close-comment-container">&#10005;</button>
-    </div>
-    
+<div class="comment-form-container">
     <div class="comment-container__content">
         <ul class="comments-list">
-            @foreach($ancestor->comments as $comment)
+            @foreach($debate->comments as $comment)
             <li class="comment-box" data-comment-id="{{ $comment->id }}">
                 <div class="comment-identity-avatar">
                     <img src="{{ $comment->user->profile_picture }}" alt="Profile Picture" class="comment-profile-picture">
@@ -28,11 +24,11 @@
                         </div>
                         @endif
                         @if(auth()->check() && auth()->user()->id === $comment->user_id)
-                        <button class="comment-menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                            </svg>
-                        </button>
+                            <button class="comment-menu">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                </svg>
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -40,10 +36,10 @@
             @endforeach
         </ul>
     </div>
-
+        
     <div class="new-comment-editor">
         @if (auth()->check())
-            <form action="{{ route('debate.comment', $ancestor->id) }}" method="POST" class="comment-form">
+            <form action="{{ route('debate.comment', $debate->id) }}" method="POST" class="comment-form">
             @csrf
                 <input type="text" class="new-comment-editor__input-field" name="comment" placeholder="Enter your comment" required>
                 <button type="submit" class="new-comment-editor__submit-button">&#8594;</button>

@@ -110,10 +110,7 @@
                                     </div>
                                 </div>
                                 
-                                <button class="debate-tabs-btn">Open Modal</button>
                                 <div id="detail-drawer-container"></div>
-
-                                @include('debate.ancestors-comment')
 
                                 @include('debate.ancestors-vote')
                             </div>
@@ -178,7 +175,8 @@
                                     <p class="claim-text__content" data-debate-id="{{ $debate->id }}">{{ $debate->title }}</p>
                                 </div>
                             </div>
-                            @include('debate.selected-comment')
+
+                            <div id="detail-drawer-container"></div>
 
                             @include('debate.selected-vote')
 
@@ -272,7 +270,8 @@
                                                             <p class="claim-text__content" data-debate-id="{{ $pro->id }}">{{ $pro->title }}</p>
                                                         </div>
                                                     </div>
-                                                    @include('debate.pros-comment')
+
+                                                    <div id="detail-drawer-container"></div>
                                                     
                                                     @include('debate.pros-vote')
                                                 </div>
@@ -357,7 +356,8 @@
                                                             <p class="claim-text__content" data-debate-id="{{ $con->id }}">{{ $con->title }}</p>
                                                         </div>
                                                     </div>
-                                                    @include('debate.cons-comment')
+                                                    
+                                                    <div id="detail-drawer-container"></div>
 
                                                     @include('debate.cons-vote')
                                                 </div>
@@ -385,50 +385,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
-        function closeAllCommentForms() {
-            document.querySelectorAll('.comment-form-container').forEach(formContainer => {
-                formContainer.style.display = 'none';
-            });
+        // Function to check if user is authenticated
+        function authCheck() {
+            return button.getAttribute('data-authenticated') === '1';
         }
-
-        document.querySelectorAll('.comment-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const formContainer = this.closest('.claims').querySelector('.comment-form-container');
-                // Close all open comment forms before opening the clicked one
-                closeAllCommentForms();
-                // Open the clicked comment form
-                formContainer.style.display = 'block';
-            });
-        });
-
-        document.querySelectorAll('.close-form-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const formContainer = this.closest('.comment-form-container');
-                formContainer.style.display = 'none';
-            });
-        });
-
-        // Event listener to close the comment form when clicking outside of it
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.comment-form-container') && !event.target.closest('.comment-btn')) {
-                closeAllCommentForms();
-            }
-        });
-
-            // Updated function for handling comments button clicks
-            document.querySelectorAll('.comment-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    if (!authCheck()) {
-                        openLoginForm();
-                    }
-                });
-            });
-
-            // Function to check if user is authenticated
-            function authCheck() {
-                return button.getAttribute('data-authenticated') === '1';
-            }
 
         // Function to handle the selection of a claim
         function selectClaim(claimId, claimSlug) {
@@ -707,7 +667,7 @@
 
     /// ####### COMMENT FUNCTIONALITY
 
-    document.addEventListener('DOMContentLoaded', function() {
+    function applyCommentFunctionality() {
 
          /****** EDIT COMMENT ********/
 
@@ -967,7 +927,7 @@
             })
             .catch(error => console.error('Error:', error));
         }
-    });
+    }
 
     
     ///// ###### DEBATE CONTROL FUNCTIONALITY 
@@ -1192,7 +1152,7 @@
 
     /////// #####  THANKS FUNCTIONALITY
 
-    document.addEventListener('DOMContentLoaded', function() {
+    function applyThanksFunctionality() {
         document.querySelectorAll('.thanks-btn').forEach(button => {
             // Check if the user has already thanked the activity on page load
             let claimCard = button.closest('.claim-card') || button.closest('.comment-box');
@@ -1265,23 +1225,32 @@
                 }
             });
         });
-    });
+    }
 
     //////######## DYNAMIC TABS
 
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.debate-tabs-btn').forEach(button => {
+        document.querySelectorAll('.comment-btn').forEach(button => {
             button.addEventListener('click', function() {
                 // Get the closest ancestor claim div
-                const ancestorClaim = button.closest('.ancestor-claim');
-                const drawerContainer = ancestorClaim.querySelector('#detail-drawer-container');
-                const debateId = ancestorClaim.querySelector('.claim-card').dataset.debateId;
-                const debateSlug = ancestorClaim.querySelector('.claim-card').dataset.debateSlug;
+                const claim = button.closest('.claims');
+                const drawerContainer = claim.querySelector('#detail-drawer-container');
+                const debateId = claim.querySelector('.claim-card').dataset.debateId;
+                const debateSlug = claim.querySelector('.claim-card').dataset.debateSlug;
 
                 fetch('/load-detail-drawer?debate_id=' + debateId + '&debate_slug=' + debateSlug)
-                    .then(response => response.text())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
                     .then(data => {
                         drawerContainer.innerHTML = data;
+
+                        // Call the functions to reapply JavaScript logic
+                        applyCommentFunctionality();
+                        applyThanksFunctionality();
 
                         // Adding event listeners for the tab buttons
                         drawerContainer.querySelector('#comments-tab-btn').addEventListener('click', function() {
