@@ -102,3 +102,5 @@ Route::get('/notification/{tab}', function($tab) {
     return abort(404);
 });
 
+
+Route::get('/load-detail-drawer', [DebateController::class, 'loadDetailDrawer']);

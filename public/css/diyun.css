@@ -1135,6 +1135,15 @@ li.pro-argument {
   display: flex;
 }
 
+
+
+.detail-drawer__content .drawer__tab {
+  display:none;
+}
+
+.detail-drawer__content .drawer__tab.current_drawer{
+  display:block;
+}
   /*----------------------------------------------
   --------------- DEBATE SETTING PAGE ----------------
   ----------------------------------------------*/

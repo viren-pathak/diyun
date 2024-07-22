@@ -1111,4 +1111,9 @@ class DebateController extends Controller
     }
 
 
+    public function loadDetailDrawer()
+    {
+        return view('debate.dynamic-modal');
+    }
+
 }

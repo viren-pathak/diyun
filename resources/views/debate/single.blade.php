@@ -110,6 +110,9 @@
                                     </div>
                                 </div>
                                 
+                                <button class="debate-tabs-btn">Open Modal</button>
+                                <div id="detail-drawer-container"></div>
+
                                 @include('debate.ancestors-comment')
 
                                 @include('debate.ancestors-vote')
@@ -1264,7 +1267,78 @@
         });
     });
 
+    //////######## DYNAMIC TABS
 
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.debate-tabs-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Get the closest ancestor claim div
+                const ancestorClaim = button.closest('.ancestor-claim');
+                const drawerContainer = ancestorClaim.querySelector('#detail-drawer-container');
+                const debateId = ancestorClaim.querySelector('.claim-card').dataset.debateId;
+                const debateSlug = ancestorClaim.querySelector('.claim-card').dataset.debateSlug;
+
+                fetch('/load-detail-drawer?debate_id=' + debateId + '&debate_slug=' + debateSlug)
+                    .then(response => response.text())
+                    .then(data => {
+                        drawerContainer.innerHTML = data;
+
+                        // Adding event listeners for the tab buttons
+                        drawerContainer.querySelector('#comments-tab-btn').addEventListener('click', function() {
+                            toggleDrawer('comments-drawer', drawerContainer);
+                        });
+                        drawerContainer.querySelector('#duplicates-tab-btn').addEventListener('click', function() {
+                            toggleDrawer('duplicates-drawer', drawerContainer);
+                        });
+                        drawerContainer.querySelector('#flags-tab-btn').addEventListener('click', function() {
+                            toggleDrawer('flags-drawer', drawerContainer);
+                        });
+                        drawerContainer.querySelector('#locations-tab-btn').addEventListener('click', function() {
+                            toggleDrawer('locations-drawer', drawerContainer);
+                        });
+                        drawerContainer.querySelector('#voters-tab-btn').addEventListener('click', function() {
+                            toggleDrawer('voters-drawer', drawerContainer);
+                        });
+
+                        // Add event listener for the close button
+                        drawerContainer.querySelector('.close-detail-drawer').addEventListener('click', function() {
+                            closeModal(drawerContainer);
+                        });
+
+                        // Add event listener for clicking outside the modal
+                        document.addEventListener('click', function(event) {
+                            if (!drawerContainer.contains(event.target) && !button.contains(event.target)) {
+                                closeModal(drawerContainer);
+                            }
+                        }, { once: true });
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+
+    // Function to toggle the drawer class
+    function toggleDrawer(activeClass, container) {
+        const drawers = container.querySelectorAll('.detail-drawer__content > div');
+        let targetDrawer = null;
+
+        drawers.forEach(drawer => {
+            if (drawer.classList.contains(activeClass)) {
+                targetDrawer = drawer;
+            } else {
+                drawer.classList.remove('current_drawer');
+            }
+        });
+
+        if (targetDrawer && !targetDrawer.classList.contains('current_drawer')) {
+            targetDrawer.classList.add('current_drawer');
+        }
+    }
+
+    // Function to close the modal and clear the container
+    function closeModal(container) {
+        container.innerHTML = '';
+    }
 
 </script>
 
