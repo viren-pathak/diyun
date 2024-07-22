@@ -126,8 +126,6 @@ class DebateController extends Controller
     
         $activeDebateId = $request->query('active');
         
-        // Retrieve comments for the debate
-        $comments = $this->getAllComments($debate);
 
         // Find ancestors of the debate
         $ancestors = [];
@@ -211,7 +209,7 @@ class DebateController extends Controller
             return $this->getTotalVotes($debateId);
         };
 
-        return view('debate.single', compact('debate', 'pros', 'cons', 'comments', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData', 'bookmarkedDebates', 'getTotalVotes'));
+        return view('debate.single', compact('debate', 'pros', 'cons', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData', 'bookmarkedDebates', 'getTotalVotes'));
     }
     
     
