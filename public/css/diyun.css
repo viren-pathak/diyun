@@ -437,10 +437,14 @@ ul.tag-flex-wrap {
   padding-top:60px;
 }
 
-.home-debate-tabs .row1 {
+.row1.four-card-row.active__template{
   display: flex;
   column-gap: 30px;
   margin-bottom: 30px;
+}
+
+.row1.four-card-row{
+  display:none;
 }
 
 .home-debate-tabs .data-col {

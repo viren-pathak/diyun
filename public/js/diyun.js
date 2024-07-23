@@ -32,7 +32,27 @@ function closeMultistepForm() {
     multistepFormContainer.style.display = "none";
 }
 
+// JS FOR HOME PAGE TABS
+$(document).ready(function() {
+    $('.debate-card__tablist button').on('click', function() {
+        // Remove active class from all buttons and templates
+        $('.debate-card__tablist button').removeClass('active-tab');
+        $('.debate-card__tab-template > div').removeClass('active__template');
 
+        // Add active class to clicked button
+        $(this).addClass('active-tab');
+
+        // Determine which template to activate
+        var targetClass = $(this).attr('id').replace('-tab', '__template');
+
+        // Add active class to corresponding template
+        $('.debate-card__tab-template > div').each(function() {
+            if ($(this).hasClass(targetClass)) {
+                $(this).addClass('active__template');
+            }
+        });
+    });
+});
 
    /*---------------------------------------------
   ------------------- SINGLE DEBATE PAGE  --------------------

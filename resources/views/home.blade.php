@@ -14,10 +14,16 @@
     </div>
 </section>
 
-<section class="home-sec-1 debate-card-sec">
-    <div class="container"> 
-        <div class="home-debate-tabs debate-tabs">  
-            <div class="row1">
+<section class="home-sec-1 debate-card-sec"> 
+    <div class="debate-card__tablist">
+        <button id="featured-tab" class="active-tab">Featured</button>
+        <button id="popular-tab">Popular</button>
+        <button id="new-tab">New</button>
+        <button id="hot-tab">Hot</button>
+    </div> 
+
+    <div class="debate-card__tab-template">
+            <div class="row1 four-card-row container featured__template active__template">
                 <div class="col1 debate-col">
                     <ul class="card-grid four-card-grid">
                         @foreach($debateStats as $debate)
@@ -178,7 +184,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+
+            @include('popularDebate')
+
+            @include('newDebate')
+
+            @include('hotDebate')
     </div>
 </section>
 
