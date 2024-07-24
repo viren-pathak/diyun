@@ -37,7 +37,7 @@
         </button>
     </div>
     <div class="detail-drawer__content">
-        <div class="drawer__tab comments-drawer current_drawer">
+        <div class="drawer__tab comments-drawer">
             @include('debate.comments')
         </div>
 

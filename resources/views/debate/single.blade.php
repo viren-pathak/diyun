@@ -460,22 +460,7 @@
     // ##### VOTES FUNCTIONALITY
 
     document.addEventListener("DOMContentLoaded", function() {
-        const voteButtons = document.querySelectorAll('.votes-btn');
-        voteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Close any open forms
-                const openForms = document.querySelectorAll('.votes-drafts-container');
-                openForms.forEach(form => {
-                    if (form.id !== this.getAttribute('data-target')) {
-                        form.style.display = 'none';
-                    }
-                });
 
-                // Open or close the clicked form
-                const target = document.getElementById(this.getAttribute('data-target'));
-                target.style.display = target.style.display === 'none' ? 'block' : 'none';
-            });
-        });
 
         // Function to initialize the chart
         function initializeChart(canvasId, votesCount) {
@@ -577,15 +562,6 @@
             initializeChart('votesChartCon{{ $conId }}', {!! json_encode($votesCount) !!});
         @endforeach
 
-        // Close vote forms when clicking outside of them
-        document.body.addEventListener('click', function(event) {
-            if (!event.target.classList.contains('votes-btn') && !event.target.closest('.votes-drafts-container')) {
-                const openForms = document.querySelectorAll('.votes-drafts-container');
-                openForms.forEach(form => {
-                    form.style.display = 'none';
-                });
-            }
-        });
     });
 
 
@@ -1230,13 +1206,35 @@
     //////######## DYNAMIC TABS
 
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.comment-btn').forEach(button => {
+        // Combined event listener for both .comment-btn and .votes-btn
+        document.querySelectorAll('.comment-btn, .votes-btn').forEach(button => {
             button.addEventListener('click', function() {
                 // Get the closest ancestor claim div
                 const claim = button.closest('.claims');
                 const drawerContainer = claim.querySelector('#detail-drawer-container');
+
+                // Check if the drawer is already open
+                if (drawerContainer.innerHTML.trim() !== '') {
+                    return; // If drawer is already open, do nothing
+                }
+
                 const debateId = claim.querySelector('.claim-card').dataset.debateId;
                 const debateSlug = claim.querySelector('.claim-card').dataset.debateSlug;
+
+                // Collect all votes containers
+                const voteContainers = [
+                    claim.querySelector(`#votesContainer${debateId}`),
+                    ...Array.from(claim.querySelectorAll(`[id^="votesContainerAncestor"]`)),
+                    ...Array.from(claim.querySelectorAll(`[id^="votesContainerPro"]`)),
+                    ...Array.from(claim.querySelectorAll(`[id^="votesContainerCon"]`))
+                ].filter(Boolean); // Remove null entries
+
+                const originalParents = voteContainers.map(container => container.parentNode);
+
+                // Determine which drawer should be active
+                const isVotesBtn = button.classList.contains('votes-btn');
+                const activeDrawerClass = isVotesBtn ? 'voters-drawer' : 'comments-drawer';
+                const activeButtonId = isVotesBtn ? 'voters-tab-btn' : 'comments-tab-btn';
 
                 fetch('/load-detail-drawer?debate_id=' + debateId + '&debate_slug=' + debateSlug)
                     .then(response => {
@@ -1248,6 +1246,17 @@
                     .then(data => {
                         drawerContainer.innerHTML = data;
 
+                        // Move votes containers inside the voters-drawer tab
+                        const votersDrawer = drawerContainer.querySelector('.voters-drawer');
+                        const commentsDrawer = drawerContainer.querySelector('.comments-drawer');
+                        
+                        if (votersDrawer) {
+                            voteContainers.forEach(container => {
+                                votersDrawer.appendChild(container);
+                                container.style.display = 'block';
+                            });
+                        }
+
                         // Call the functions to reapply JavaScript logic
                         applyCommentFunctionality();
                         applyThanksFunctionality();
@@ -1255,31 +1264,47 @@
                         // Adding event listeners for the tab buttons
                         drawerContainer.querySelector('#comments-tab-btn').addEventListener('click', function() {
                             toggleDrawer('comments-drawer', drawerContainer);
+                            updateActiveButton('comments-tab-btn');
                         });
                         drawerContainer.querySelector('#duplicates-tab-btn').addEventListener('click', function() {
                             toggleDrawer('duplicates-drawer', drawerContainer);
+                            updateActiveButton('duplicates-tab-btn');
                         });
                         drawerContainer.querySelector('#flags-tab-btn').addEventListener('click', function() {
                             toggleDrawer('flags-drawer', drawerContainer);
+                            updateActiveButton('flags-tab-btn');
                         });
                         drawerContainer.querySelector('#locations-tab-btn').addEventListener('click', function() {
                             toggleDrawer('locations-drawer', drawerContainer);
+                            updateActiveButton('locations-tab-btn');
                         });
                         drawerContainer.querySelector('#voters-tab-btn').addEventListener('click', function() {
                             toggleDrawer('voters-drawer', drawerContainer);
+                            updateActiveButton('voters-tab-btn');
                         });
+
+                        // Set the current drawer class based on the button clicked
+                        if (activeDrawerClass === 'voters-drawer' && votersDrawer) {
+                            votersDrawer.classList.add('current_drawer');
+                        }
+                        if (activeDrawerClass === 'comments-drawer' && commentsDrawer) {
+                            commentsDrawer.classList.add('current_drawer');
+                        }
 
                         // Add event listener for the close button
                         drawerContainer.querySelector('.close-detail-drawer').addEventListener('click', function() {
-                            closeModal(drawerContainer);
+                            closeModal(drawerContainer, voteContainers, originalParents);
                         });
 
                         // Add event listener for clicking outside the modal
                         document.addEventListener('click', function(event) {
                             if (!drawerContainer.contains(event.target) && !button.contains(event.target)) {
-                                closeModal(drawerContainer);
+                                closeModal(drawerContainer, voteContainers, originalParents);
                             }
                         }, { once: true });
+                        
+                        // Set the active button class
+                        updateActiveButton(activeButtonId);
                     })
                     .catch(error => console.error('Error:', error));
             });
@@ -1304,8 +1329,32 @@
         }
     }
 
+    // Function to update the active button
+    function updateActiveButton(activeButtonId) {
+        const btnList = document.querySelector('.detail-drawer__btnlist');
+        if (btnList) {
+            const buttons = btnList.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.classList.remove('current__detail-btn');
+            });
+            const activeButton = btnList.querySelector(`#${activeButtonId}`);
+            if (activeButton) {
+                activeButton.classList.add('current__detail-btn');
+            }
+        }
+    }
+
     // Function to close the modal and clear the container
-    function closeModal(container) {
+    function closeModal(container, voteContainers, originalParents) {
+        // Move votes containers back to their original parents
+        voteContainers.forEach((container, index) => {
+            const originalParent = originalParents[index];
+            if (container && originalParent) {
+                originalParent.appendChild(container);
+                container.style.display = 'none'; // Hide it again
+            }
+        });
+
         container.innerHTML = '';
     }
 
