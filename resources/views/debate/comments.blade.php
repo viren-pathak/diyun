@@ -1,5 +1,8 @@
 <div class="comment-form-container">
     <div class="comment-container__content">
+        @if($debate->comments->isEmpty())
+            <p>No comments yet</p>
+        @else
         <ul class="comments-list">
             @foreach($debate->comments as $comment)
             <li class="comment-box" data-comment-id="{{ $comment->id }}">
@@ -35,6 +38,7 @@
             </li>
             @endforeach
         </ul>
+        @endif
     </div>
         
     <div class="new-comment-editor">

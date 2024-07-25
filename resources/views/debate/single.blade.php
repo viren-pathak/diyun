@@ -1206,6 +1206,10 @@
     //////######## DYNAMIC TABS
 
     document.addEventListener('DOMContentLoaded', function() {
+
+        // Apply thanks functionality to all buttons on page load
+        applyThanksFunctionality(); 
+
         // Combined event listener for both .comment-btn and .votes-btn
         document.querySelectorAll('.comment-btn, .votes-btn').forEach(button => {
             button.addEventListener('click', function() {
