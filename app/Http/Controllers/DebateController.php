@@ -210,6 +210,21 @@ class DebateController extends Controller
             return $this->getTotalVotes($debateId);
         };
 
+        // Get the logged-in user's ID
+        $userId = Auth::id();
+
+        // Mark the debate as read if not already marked
+        $alreadyRead = DebateRead::where('debate_id', $debate->id)
+                                ->where('user_id', $userId)
+                                ->exists();
+
+        if (!$alreadyRead && $userId) {
+            DebateRead::create([
+                'debate_id' => $debate->id,
+                'user_id' => $userId,
+            ]);
+        }
+
         return view('debate.single', compact('debate', 'pros', 'cons', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData', 'bookmarkedDebates', 'getTotalVotes'));
     }
     
