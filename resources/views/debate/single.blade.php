@@ -1401,6 +1401,8 @@
 
 
     /******* MARK DEBATE SEEN FUNCTIONALITY  *******/
+
+    // mark as read button click functionality code
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.mark-as-read-btn').forEach(function (button) {
             button.addEventListener('click', function () {
@@ -1423,8 +1425,40 @@
                 .catch(error => console.error('Error:', error));
             });
         });
-    });
 
+        // ripple effect on button click
+
+        $(document).on('click', '.mark-as-read-btn', function (e) {
+            // Get the parent .claim-card of the clicked button
+            var claimCard = $(this).closest('.claim-card');
+
+            // Create the ripple element
+            var ripple = $('<span class="ripple"></span>');
+
+            // Append the ripple to the claim-card
+            claimCard.append(ripple);
+
+            // Get the click coordinates relative to the claim-card
+            var posX = e.pageX - claimCard.offset().left;
+            var posY = e.pageY - claimCard.offset().top;
+
+            // Set the size of the ripple (using the largest dimension of the claim-card)
+            var rippleSize = Math.max(claimCard.width(), claimCard.height());
+
+            // Position the ripple and set its dimensions
+            ripple.css({
+                top: posY - rippleSize / 2 + 'px',
+                left: posX - rippleSize / 2 + 'px',
+                width: rippleSize + 'px',
+                height: rippleSize + 'px'
+            });
+
+            // After the animation ends, remove the ripple
+            ripple.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function () {
+                $(this).remove();
+            });
+        });
+    });
 
 
 </script>
