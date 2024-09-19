@@ -60,6 +60,8 @@ Route::post('/debate/bookmark', [DebateController::class, 'bookmark'])->name('de
 Route::get('debate/{slug}/bookmarks', [DebateController::class, 'getUserBookmarks'])->name('debate.bookmarks');
 Route::post('/debate/is-bookmarked', [DebateController::class, 'isBookmarked'])->name('debate.isBookmarked');
 
+Route::post('/debate/mark-as-read', [DebateController::class, 'markAsRead'])->name('debate.markAsRead');
+
 Route::get('/', [DebateController::class, 'getHomeData'])->name('home');
 
 Route::get('/tags/{tag}', [DebateController::class, 'getDebatesByTag'])->name('tags.single');

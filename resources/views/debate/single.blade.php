@@ -104,6 +104,15 @@
                                                 </svg>
                                             </div>
                                         @endif
+                                        @auth
+                                            @if(!$ancestor->isReadBy(Auth::user()->id))  {{-- Only show the button if the user hasn't marked it as read --}}
+                                                <div class="unread-indicator">
+                                                    <button class="mark-as-read-btn unread-indicator__button" data-debate-id="{{ $ancestor->id }}">
+                                                        <span class="unread-indicator__core"></span>
+                                                    </button>
+                                                </div>
+                                            @endif
+                                        @endauth
                                     </div>
                                     <div class="claim-text">
                                         <p class="claim-text__content" data-debate-id="{{ $ancestor->id }}">{{ $ancestor->title }}</p>
@@ -170,6 +179,15 @@
                                             <span class="comment-count">{{ $debate->comments->count() > 0 ? $debate->comments->count() : '' }}</span>
                                         </button>
                                     </div>
+                                    @auth
+                                        @if(!$debate->isReadBy(Auth::user()->id))  {{-- Only show the button if the user hasn't marked it as read --}}
+                                            <div class="unread-indicator">
+                                                <button class="mark-as-read-btn unread-indicator__button" data-debate-id="{{ $debate->id }}">
+                                                    <span class="unread-indicator__core"></span>
+                                                </button>
+                                            </div>
+                                        @endif
+                                    @endauth
                                 </div>
                                 <div class="claim-text">
                                     <p class="claim-text__content" data-debate-id="{{ $debate->id }}">{{ $debate->title }}</p>
@@ -265,6 +283,15 @@
                                                                     </svg>
                                                                 </div>
                                                             @endif
+                                                            @auth
+                                                                @if(!$pro->isReadBy(Auth::user()->id))  {{-- Only show the button if the user hasn't marked it as read --}}
+                                                                    <div class="unread-indicator">
+                                                                        <button class="mark-as-read-btn unread-indicator__button" data-debate-id="{{ $pro->id }}">
+                                                                            <span class="unread-indicator__core"></span>
+                                                                        </button>
+                                                                    </div>
+                                                                @endif
+                                                            @endauth
                                                         </div>
                                                         <div class="claim-text">
                                                             <p class="claim-text__content" data-debate-id="{{ $pro->id }}">{{ $pro->title }}</p>
@@ -351,6 +378,15 @@
                                                                     </svg>
                                                                 </div>
                                                             @endif
+                                                            @auth
+                                                                @if(!$con->isReadBy(Auth::user()->id))  {{-- Only show the button if the user hasn't marked it as read --}}
+                                                                    <div class="unread-indicator">
+                                                                        <button class="mark-as-read-btn unread-indicator__button" data-debate-id="{{ $con->id }}">
+                                                                            <span class="unread-indicator__core"></span>
+                                                                        </button>
+                                                                    </div>
+                                                                @endif
+                                                            @endauth
                                                         </div>
                                                         <div class="claim-text">
                                                             <p class="claim-text__content" data-debate-id="{{ $con->id }}">{{ $con->title }}</p>
@@ -1361,6 +1397,35 @@
 
         container.innerHTML = '';
     }
+
+
+
+    /******* MARK DEBATE SEEN FUNCTIONALITY  *******/
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.mark-as-read-btn').forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Hide the button immediately
+                this.style.display = 'none';
+
+                const debateId = this.getAttribute('data-debate-id');
+
+                fetch('{{ route('debate.markAsRead') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        debate_id: debateId
+                    }),
+                })
+                .then(response => response.json())
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+
+
 
 </script>
 

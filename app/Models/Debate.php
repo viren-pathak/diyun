@@ -66,4 +66,11 @@ class Debate extends Model
     {
         return $this->belongsTo(Debate::class, 'root_id');
     }
+
+    public function isReadBy($userId)
+    {
+        return DebateRead::where('debate_id', $this->id)
+                         ->where('user_id', $userId)
+                         ->exists();
+    }
 }

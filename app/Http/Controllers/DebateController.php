@@ -10,6 +10,7 @@ use App\Models\Vote;
 use App\Models\DebateRole;
 use App\Models\DebateBookmark;
 use App\Models\DebateInviteLink;
+use App\Models\DebateRead;
 use App\Models\Thanks;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -520,6 +521,28 @@ class DebateController extends Controller
         return $debate->id;
     }
     
+    public function markAsRead(Request $request)
+    {
+        $debateId = $request->input('debate_id');
+        $userId = Auth::id();
+
+        // Check if the user has already marked this debate as read
+        $alreadyRead = DebateRead::where('debate_id', $debateId)
+                                ->where('user_id', $userId)
+                                ->exists();
+
+        if (!$alreadyRead) {
+            // Create a new record in the debate_reads table
+            DebateRead::create([
+                'debate_id' => $debateId,
+                'user_id' => $userId,
+            ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+
     public function addComment(Request $request, $debateId)
     {
         $request->validate([
