@@ -1155,4 +1155,41 @@ class DebateController extends Controller
         return view('debate.dynamic-modal', compact('debate'));
     }
 
+    public function myFollowing()
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+    
+        // Get debates that the user has marked as read, and with root_id or parent_id as null
+        $debates = Debate::whereIn('id', function ($query) use ($user) {
+            $query->select('debate_id')
+                  ->from('debate_reads')
+                  ->where('user_id', $user->id);
+        })->whereNull('root_id')
+          ->get();
+    
+        // Prepend the base URL to the image path for debates
+        $debates->transform(function ($debate) {
+            // Ensure the image URL is properly formed
+            $debate->image = asset('storage/' . $debate->image);
+            return $debate;
+        });
+    
+        // Calculate statistics for each debate and get contributors
+        $debateStats = $debates->map(function ($debate) {
+            $stats = $this->getDebateStatistics($debate);
+            $debate->total_claims = $stats['total_claims'];
+            $debate->total_votes = $stats['total_votes'];
+            $debate->total_participants = $stats['total_participants'];
+            $debate->total_views = $stats['total_views'];
+            $debate->total_contributions = $stats['total_contributions'];
+            return $debate;
+        });
+
+
+        // Return the debates instead of a view
+        return $debateStats;
+    }
+    
+
 }

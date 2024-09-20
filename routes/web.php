@@ -94,6 +94,7 @@ Route::get('/search', [Basecontroller::class, 'search'])->name('search.page');
 
 Route::get('/debate/{slug}/my-claims', [DebateController::class, 'getMyClaims'])->name('debate.my_claims');
 Route::get('/debate/{slug}/contributions', [DebateController::class, 'getMyContributions'])->name('debate.contributions');
+Route::get('/debate/my-following', [DebateController::class, 'myFollowing'])->name('debate.myFollowing');
 
 
 /**** SPECIAL ROUTE FOR NOTIFICATIONS TAB ****/

@@ -73,4 +73,10 @@ class Debate extends Model
                          ->where('user_id', $userId)
                          ->exists();
     }
+
+    public function debateReads()
+    {
+        return $this->hasMany(DebateRead::class, 'debate_id', 'id');
+    }
+
 }

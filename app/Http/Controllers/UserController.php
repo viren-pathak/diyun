@@ -9,6 +9,8 @@ use App\Mail\RegistrationConfirmation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Debate;
+use App\Models\DebateRead;
 use Session;
 use Socialite;
 
@@ -161,7 +163,14 @@ class UserController extends Controller
     public function dashboard()
     {
         if (Auth::check()) {
-            return view('auth.dashboard');
+            // Create an instance of DebateController
+            $debateController = new \App\Http\Controllers\DebateController();
+
+            // Call the myFollowing method from DebateController
+            $debateStats = $debateController->myFollowing();
+
+            // Pass the debates to the dashboard view
+            return view('auth.dashboard', compact('debateStats'));
         }
         return redirect("/")->withSuccess('You are not allowed to access');
     }
