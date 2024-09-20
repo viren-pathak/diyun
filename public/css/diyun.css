@@ -839,6 +839,10 @@ display: block;
 transform: scale(.5);
 }
 
+.unread-indicator__button:hover .unread-indicator__core {
+  transform: scale(1) !important;
+}
+
 /* Ripple effect styling */
 .claim-card {
   position: relative;
