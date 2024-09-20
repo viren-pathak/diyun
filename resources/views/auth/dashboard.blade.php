@@ -167,6 +167,7 @@ display: flex;
                         @endforeach
                     </ul>
                 </div>
+            </div>
         </div>
     </div>
     <div id="All" class="content">
