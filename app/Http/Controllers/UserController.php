@@ -166,11 +166,12 @@ class UserController extends Controller
             // Create an instance of DebateController
             $debateController = new \App\Http\Controllers\DebateController();
 
-            // Call the myFollowing method from DebateController
+            // Call the myFollowing method and myRecentView method
             $debateStats = $debateController->myFollowing();
+            $recentDebates = $debateController->myRecentView();
 
             // Pass the debates to the dashboard view
-            return view('auth.dashboard', compact('debateStats'));
+            return view('auth.dashboard', compact('debateStats', 'recentDebates'));
         }
         return redirect("/")->withSuccess('You are not allowed to access');
     }

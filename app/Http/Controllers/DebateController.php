@@ -12,6 +12,7 @@ use App\Models\DebateBookmark;
 use App\Models\DebateInviteLink;
 use App\Models\DebateRead;
 use App\Models\Thanks;
+use App\Models\DebateRecentView;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -103,6 +104,9 @@ class DebateController extends Controller
         // Find the debate by slug
         $debate = Debate::where('slug', $slug)->firstOrFail();
     
+        // Record the user's recent view
+        $this->recordRecentView($debate->id);
+
         // Find the root debate
         $rootDebate = $this->findRootDebate($debate);
     
@@ -1192,4 +1196,56 @@ class DebateController extends Controller
     }
     
 
+    // Method to record the recent view
+    protected function recordRecentView($debateId)
+    {
+        $userId = Auth::id();
+    
+        if ($userId) {
+            // Delete existing record if it exists
+            DebateRecentView::where('debate_id', $debateId)
+                            ->where('user_id', $userId)
+                            ->delete();
+    
+            // Create a new record for the recent view
+            DebateRecentView::create([
+                'debate_id' => $debateId,
+                'user_id' => $userId,
+            ]);
+        }
+    }
+    
+
+    public function myRecentView()
+    {
+        $user = Auth::user();
+    
+        // Get debates that the user has marked as recently viewed
+        $recentViews = DebateRecentView::where('user_id', $user->id)
+            ->with('debate') // Assuming 'debate' is defined in DebateRecentView model
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        // Prepend the base URL to the image path for debates
+        $recentViews->transform(function ($view) {
+            $view->debate->image = asset('storage/' . $view->debate->image);
+            return $view;
+        });
+    
+        // Calculate statistics for each debate
+        $recentDebateStats = $recentViews->map(function ($view) {
+            $stats = $this->getDebateStatistics($view->debate);
+            $view->debate->total_claims = $stats['total_claims'];
+            $view->debate->total_votes = $stats['total_votes'];
+            $view->debate->total_participants = $stats['total_participants'];
+            $view->debate->total_views = $stats['total_views'];
+            $view->debate->total_contributions = $stats['total_contributions'];
+            return $view;
+        });
+    
+        return $recentDebateStats;
+    }
+    
+
+    
 }

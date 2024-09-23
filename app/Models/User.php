@@ -61,4 +61,9 @@ class User extends Authenticatable
         return $this->hasMany(DebateRole::class)->where('root_id', $debateId);
     }
 
+    public function recentViews()
+    {
+        return $this->hasMany(DebateRecentView::class);
+    }
+
 }

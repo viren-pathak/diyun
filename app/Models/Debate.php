@@ -79,4 +79,9 @@ class Debate extends Model
         return $this->hasMany(DebateRead::class, 'debate_id', 'id');
     }
 
+    public function recentViews()
+    {
+        return $this->hasMany(DebateRecentView::class);
+    }
+
 }
