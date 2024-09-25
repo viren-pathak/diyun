@@ -55,6 +55,7 @@ Route::get('/get-child-arguments/{slug}', [DebateController::class, 'getChildArg
 Route::get('/debate/{slug}/settings', [DebateController::class, 'settings'])->name('settings');
 Route::post('/debate/{slug}/edit', [DebateController::class, 'editRootDebate'])->name('editRootDebate');
 Route::post('/debate/update-title/{id}', [DebateController::class, 'updateDebateTitle'])->name('updateDebateTitle');
+Route::get('/debate/{slug}/export', [DebateController::class, 'exportDebate'])->name('exportDebate');
 
 Route::post('/debate/bookmark', [DebateController::class, 'bookmark'])->name('debate.bookmark');
 Route::get('debate/{slug}/bookmarks', [DebateController::class, 'getUserBookmarks'])->name('debate.bookmarks');

@@ -109,10 +109,12 @@
                     <div class="debate-creation-label">
                         <p>This debate was published on {{ $rootDebate->created_at->format('M d, Y') }} by {{ $rootDebate->user->name }}</p>
                     </div>
+                    @if($isOwner)
                     <div class="debate-invite-container">
                         <p>Users</p>
                         <button id="debate-invite-user-btn" class="debate-invite-container__button">Invite Users</button>
                     </div>
+                    @endif
                     <div class="debate-participants-container">
                         <h3 class="debate-participants-container_heading">Participants in Debate</h3>
                         <ul class="debate-participants_list">
@@ -230,7 +232,7 @@
                 document.querySelector('.debate-details__submit-btn').style.display = 'none';
 
                 // Disable action buttons
-                document.querySelectorAll('.debate-actions-container button').forEach(function(button) {
+                document.querySelectorAll('.debate-action__change-type button,.debate-action__archive-debate button').forEach(function(button) {
                     button.disabled = true;
                 });
 
@@ -427,6 +429,66 @@
             }
         });
 
+
+        // ###### DEBATE EXPORT FUNCTIONALITY
+        
+        document.getElementById('export-debate').addEventListener('click', function() {
+            // Check if the user is authenticated
+            if ({{ json_encode($isAuthenticated) }}) {
+                // Create the popup HTML
+                const popupHTML = `
+                    <div id="debate-export-popup" class="ajax-export-popup">
+                        <div class="export-popup-content">
+                            <span class="close debate-export-popup__close">&times;</span>
+                            <h2>Export Discussion</h2>
+                            <p>You may export discussions for private use. If you would like to request consent for other uses, please contact us.</p>
+                            <button id="export-download-button">Download</button>
+                            <button id="close-export-popup">Close</button>
+                        </div>
+                    </div>
+                `;
+
+                // Append the popup to the body
+                document.body.insertAdjacentHTML('beforeend', popupHTML);
+
+                // Event listener for the download button
+                document.getElementById('export-download-button').addEventListener('click', function() {
+                    // Redirect to the export route to download the file
+                    window.location.href = '{{ route("exportDebate", ["slug" => $rootDebate->slug]) }}';
+                    closeExportPopup();
+                });
+
+                // Event listener for the close button
+                document.getElementById('close-export-popup').addEventListener('click', function() {
+                    closeExportPopup();
+                });
+
+                // Event listener for the close icon
+                document.querySelector('.debate-export-popup__close').addEventListener('click', function() {
+                    closeExportPopup();
+                });
+            }
+        });
+
+        // Function to close the popup
+        function closeExportPopup() {
+            const popup = document.getElementById('debate-export-popup');
+            if (popup) {
+                popup.remove(); // Remove the popup from the DOM
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var isAuthenticated = @json($isAuthenticated);
+
+            if (!isAuthenticated) {
+                // Disable action buttons
+                document.querySelectorAll('.debate-actions__item-lists button').forEach(function(button) {
+                    button.disabled = true; // Disable the button
+                    button.classList.add('disabled-link'); // Add a class to style it
+                });
+            }
+        });
 
         
     </script>

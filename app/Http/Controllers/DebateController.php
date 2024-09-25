@@ -759,8 +759,11 @@ class DebateController extends Controller
 
         // Check if the user is authenticated and the owner of the debate
         $isOwner = auth()->check() && auth()->user()->id === $rootDebate->user_id;
+
+        // Set a flag to determine if the user is authenticated
+        $isAuthenticated = auth()->check();
     
-        return view('debate.settings', compact('rootDebate', 'participants', 'hideButtons', 'isOwner'));
+        return view('debate.settings', compact('rootDebate', 'participants', 'hideButtons', 'isOwner', 'isAuthenticated'));
     }
     
     // New method to retrieve all participants in the debate hierarchy
@@ -1246,6 +1249,61 @@ class DebateController extends Controller
         return $recentDebateStats;
     }
     
+    public function exportDebate($slug)
+    {
+        // Find the root debate using the slug
+        $rootDebate = Debate::where('slug', $slug)->firstOrFail();
+
+        // Start at level 1 (root debate) and gather debates in hierarchy with proper formatting
+        $debateTitles = $this->formatDebateHierarchy($rootDebate, 1, "", true);
+
+        // Prepare the data to be saved in a file
+        $fileContent = implode(PHP_EOL, $debateTitles);  // Titles separated by new lines
+
+        // Name the file using the slug of the root debate
+        $fileName = $rootDebate->slug . '.txt';
+
+        // Create the text file and return it as a download response
+        return response()->streamDownload(function () use ($fileContent) {
+            echo $fileContent;
+        }, $fileName, [
+            'Content-Type' => 'text/plain',
+        ]);
+    }
+
+    // Recursive method to format debate hierarchy with numbering and indentation
+    private function formatDebateHierarchy($debate, $level, $numbering, $isRoot = false, $indentLevel = 0)
+    {
+        // Generate the numbering for this debate (appending the level without adding extra dot)
+        $currentNumber = $numbering ? "$numbering$level" : "$level";
+
+        // Root debate should not show a side, only child debates have sides
+        $side = !$isRoot ? ($debate->side === 'pro' ? 'Pro' : 'Con') : '';
+        
+        // Indent as per generation level (2 spaces for each level)
+        $indentation = str_repeat('  ', $indentLevel);
+        
+        // If it's the root debate, keep title on the same line
+        if ($isRoot) {
+            $formattedTitle = "{$currentNumber}. {$debate->title}";
+        } else {
+            // For child debates: First line contains numbering and side, second line contains the title
+            $formattedTitle = "{$indentation}{$currentNumber}. {$side}" . PHP_EOL . "{$indentation}{$debate->title}";
+        }
+
+        // Store the formatted title
+        $titles = [$formattedTitle];
+
+        // Get all child debates related to this debate
+        $childDebates = Debate::where('parent_id', $debate->id)->get();
+
+        // If there are children, go one level deeper and number them accordingly
+        foreach ($childDebates as $index => $childDebate) {
+            $titles = array_merge($titles, $this->formatDebateHierarchy($childDebate, $index + 1, $currentNumber . '.', false, $indentLevel + 1));
+        }
+
+        return $titles;
+    }
 
     
 }
