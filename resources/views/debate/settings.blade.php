@@ -51,12 +51,39 @@
                                     <input type="text" id="tags" name="tags" value="{{ implode(',', json_decode($rootDebate->tags)) }}"><br>
                                 </div>
 
-                                {{-- Voting Allowed Checkbox --}}
-                                <div class="debate-details__voting">
-                                    <label for="voting_allowed">Allow Voting</label><br>
-                                    <input type="checkbox" id="voting_allowed" name="voting_allowed" {{ $rootDebate->voting_allowed ? 'checked' : '' }}>
+                                <div class="debate-options-container">
+                                    <h4 class="debate-options__title">Debate Options</h4>
+                                    <div class="debate-options__checkbox-items">
+                                        {{-- Voting Allowed Checkbox --}}
+                                        <div class="debate-options__item debate-details__participation">
+                                            <label for="participation_request">Allow participation requests</label><br>
+                                            <input type="checkbox" id="participation_request" name="participation_request">
+                                        </div>
+                                        <div class="debate-options__item debate-details__discussion-chat">
+                                            <label for="discussion_chat">Enable discussion chat</label><br>
+                                            <input type="checkbox" id="discussion_chat" name="discussion_chat">
+                                        </div>
+                                        <div class="debate-options__item debate-details__voting">
+                                            <label for="voting_allowed">Enable Voting</label><br>
+                                            <input type="checkbox" id="voting_allowed" name="voting_allowed" {{ $rootDebate->voting_allowed ? 'checked' : '' }}>
+                                        </div>
+                                    </div>
+                                    <div class="debate-options__voting-visibility">
+                                        <p class="voting-visibility__heading">Voting visibility:</p>
+                                        <select name="voting-visibility" id="voting-visibility" class="voting-visibility__heading">
+                                            <option value="all-votes">All users See All votes</option>
+                                            <option value="admin-votes">Admins see all votes</option>
+                                            <option value="users-votes">Users only see their own votes</option>
+                                        </select>
+                                    </div>
+                                    <div class="debate-options__authors-visibility">
+                                        <p class="authors-visibility__heading">Show authors also above claims:</p>
+                                        <select name="authors-visibility" id="authors-visibility"  class="authors-visibility__dropdown">
+                                            <option value="never">Never</option>
+                                        </select>
+                                        <p class="authors-visibility__description">Author visibility can only be enabled in private discussions.</p>
+                                    </div>
                                 </div>
-
 
                                 {{-- Debate Actions --}}
                                 <div class="debate-actions-container">
