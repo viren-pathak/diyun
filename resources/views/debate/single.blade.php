@@ -296,6 +296,24 @@
                                                         <div class="claim-text">
                                                             <p class="claim-text__content" data-debate-id="{{ $pro->id }}">{{ $pro->title }}</p>
                                                         </div>
+                                                        @if (!$pro->buttonFlags['hideActionButtons'])
+                                                            <div class="claim-button-bar">
+                                                                @if ($pro->buttonFlags['isChildCreator'])
+                                                                    <div class="claim-button-bar__child-creator">
+                                                                        <button class="claim-button-bar__archive button-bar__child">Archive</button>
+                                                                        <button class="claim-button-bar__move button-bar__child">Move</button>
+                                                                        <button class="claim-button-bar__edit button-bar__child">Edit</button>
+                                                                    </div>
+                                                                @endif
+
+                                                                @if ($pro->buttonFlags['isRootOwner'])
+                                                                    <div class="claim-button-bar__root-owner">
+                                                                    <button class="claim-button-bar__reply button-bar__owner">Reply</button>
+                                                                    <button class="claim-button-bar__accept button-bar__owner">Accept</button>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        @endif
                                                     </div>
 
                                                     <div id="detail-drawer-container"></div>
@@ -391,6 +409,24 @@
                                                         <div class="claim-text">
                                                             <p class="claim-text__content" data-debate-id="{{ $con->id }}">{{ $con->title }}</p>
                                                         </div>
+                                                        @if (!$con->buttonFlags['hideActionButtons'])
+                                                            <div class="claim-button-bar">
+                                                                @if ($con->buttonFlags['isChildCreator'])
+                                                                    <div class="claim-button-bar__child-creator">
+                                                                        <button class="claim-button-bar__archive button-bar__child">Archive</button>
+                                                                        <button class="claim-button-bar__move button-bar__child">Move</button>
+                                                                        <button class="claim-button-bar__edit button-bar__child">Edit</button>
+                                                                    </div>
+                                                                @endif
+
+                                                                @if ($con->buttonFlags['isRootOwner'])
+                                                                    <div class="claim-button-bar__root-owner">
+                                                                    <button class="claim-button-bar__reply button-bar__owner">Reply</button>
+                                                                    <button class="claim-button-bar__accept button-bar__owner">Accept</button>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                     
                                                     <div id="detail-drawer-container"></div>

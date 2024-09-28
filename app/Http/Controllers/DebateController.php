@@ -229,6 +229,17 @@ class DebateController extends Controller
             ]);
         }
 
+        // Add creator and owner information for pros
+        foreach ($pros as $pro) {
+            $pro->buttonFlags = $this->creatorOrOwner($pro, $userId, $rootDebate);
+        }
+
+        // Add creator and owner information for cons
+        foreach ($cons as $con) {
+            $con->buttonFlags = $this->creatorOrOwner($con, $userId, $rootDebate);
+        }
+
+
         return view('debate.single', compact('debate', 'pros', 'cons', 'hideButtons', 'ancestors', 'rootDebate', 'votesCount', 'ancestorsVotesCount', 'prosVotesCount', 'consVotesCount', 'averageVotes', 'myClaims', 'myContributions', 'debateStats', 'debatePopupData', 'bookmarkedDebates', 'getTotalVotes'));
     }
     
@@ -1304,6 +1315,34 @@ class DebateController extends Controller
 
         return $titles;
     }
+
+
+    private function creatorOrOwner($debate, $userId)
+    {
+        // Check if the logged-in user is the creator of the current child debate
+        $isChildCreator = $debate->user_id === $userId;
+    
+        // Find the root debate using the root_id of the current debate (if it exists)
+        if ($debate->root_id) {
+            $rootDebate = Debate::find($debate->root_id);
+        } else {
+            $rootDebate = $this->findRootDebate($debate);
+        }
+    
+        // Check if the logged-in user is the owner (creator) of the root debate
+        $isRootOwner = $rootDebate && $rootDebate->user_id === $userId;
+    
+        // If the child debate creator and root owner are the same, hide both buttons
+        $hideActionButtons = $isChildCreator && $isRootOwner;
+    
+        // Return both flags for button display logic, and the new hideButtons flag
+        return [
+            'isRootOwner' => $isRootOwner,
+            'isChildCreator' => $isChildCreator,
+            'hideActionButtons' => $hideActionButtons,
+        ];
+    }
+    
 
     
 }
